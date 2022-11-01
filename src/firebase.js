@@ -31,23 +31,36 @@ const auth = getAuth()
 const providerGoogle = new GoogleAuthProvider();
 
 
-function onAuth(setUser,setUserData) {
+function onAuth(setUser, setUserData) {
   return onAuthStateChanged(auth, (user) => {
         if (user) {
               setUser(user)
               getData(setUserData)
+        }else{
+          setUser(null)
         }
   });
 }
 
-const signup = (email, password, navigate) => {
-  createUserWithEmailAndPassword(auth, email, password);
-  navigate("/")
+const signup = (email, password, navigate, setSuccess) => {
+  createUserWithEmailAndPassword(auth, email, password)
+  .then((result) => {
+    navigate("/")
+})
+.catch((error) => {
+  setSuccess(false)
+});
+  
 };
 
-const login = (email, password, navigate) => {
-  signInWithEmailAndPassword(auth, email, password);
+const login = (email, password, navigate, setSuccess) => {
+  signInWithEmailAndPassword(auth, email, password)
+.then((result) => {
   navigate("/")
+})
+.catch((error) => {
+setSuccess(false)
+});
 };
 
 function loginWithGoogle (navigate) {

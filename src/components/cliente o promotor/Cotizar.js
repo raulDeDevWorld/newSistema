@@ -34,6 +34,7 @@ const {setSaveCotizacion}= useAuth()
       propositoDeCompra: e.target.form[8].value,
       estadoMigratorio: e.target.form[9].value,
     }
+    console.log(object)
     writeUserData(object)
     setSaveCotizacion(true)
 
@@ -45,8 +46,8 @@ const {setSaveCotizacion}= useAuth()
     const n = e.target.form[6].value    // plazoEnMeses
     const tasaDeinteresAnual00 = e.target.form[5].value  //
     const i = (tasaDeinteresAnual00 / 100) / (360 * 12 / 365)
-    const cotaMes = p / ((1 - Math.pow((1 + (i / 100)), -n)) / i)
-
+    const cotaMes = p / ((1 - Math.pow((1 + i), -(n))) / i)
+    console.log(cotaMes)
     setMontoDePrestamo(e.target.form[4].value)
     setPlazoEnMeses(e.target.form[6].value)
     setTasaDeinteresAnual(e.target.form[5].value)
@@ -57,14 +58,7 @@ const {setSaveCotizacion}= useAuth()
     setSaveCotizacion(false)
   }
    
-  const handlerOnChange = (e) => {
-    
-    if(e.target.name == "tasa") {
-       setTasaDeinteresAnual(e.target.value + "%**")
-    }
-    
-    
-  }
+
 
   console.log(tasaDeinteresAnual)
 
@@ -112,30 +106,44 @@ const {setSaveCotizacion}= useAuth()
                             className="border-secondary form-control mb-3 text-center"
                             placeholder="Ingreso Mensual"
                           ></input>
-                          <input
-                            type="text"
-                            name="dato3"
-                            className="border-secondary form-control mb-3 text-center"
-                            placeholder="Precio de Venta"
-                          ></input>
-                          <input
-                            type="text"
-                            name="dato3"
-                            className="border-secondary form-control mb-3 text-center"
-                            placeholder="Abono Inicial"
-                          ></input>
-                          <input
-                            type="text"
-                            name="dato3"
-                            className="border-secondary form-control mb-3 text-center"
-                            placeholder="Monto de prestamo $"
-                          ></input>
-                          <input
-                            type="text"
-                            name="tasa"
-                            className="percentage border-secondary form-control mb-3 text-center"
-                            placeholder="Tasa de interes anual %"
-                          ></input> 
+                          <div class="d-flex justify-content-center align-items-center mb-3">
+                          <span class="w-25 input-group-text m-0 p-0 d-flex justify-content-center" id="inputGroup-sizing-sm">$</span>
+                            <input type="text"
+                              name="dato3"
+                              className="w-100 border-secondary form-control  text-center p-0 m-0"
+                              placeholder="Precio de venta $" />
+                          </div>
+                          <div class="d-flex justify-content-center align-items-center mb-3">
+                          <span class="w-25 input-group-text m-0 p-0 d-flex justify-content-center" id="inputGroup-sizing-sm">$</span>
+                            <input type="text"
+                              name="dato3"
+                              className="w-100 border-secondary form-control  text-center p-0 m-0"
+                              placeholder="Abono inicial $"/>
+                          </div>
+                         
+                          
+
+                          <div class="d-flex justify-content-center align-items-center mb-3">
+                              <span class="w-25 input-group-text m-0 p-0 d-flex justify-content-center" id="inputGroup-sizing-sm">$</span>
+                            <input type="text"
+                              name="dato3"
+                              className="w-100 border-secondary form-control  text-center p-0 m-0"
+                              placeholder="Monto de prestamo $" />
+                          </div>
+
+
+
+
+                          <div class="d-flex justify-content-center align-items-center mb-3">
+                            <input type="text"
+                              name="dato3"
+                              className="w-100 border-secondary form-control  text-center p-0 m-0"
+                              placeholder="Tasa de interes anual $" />
+                              <span class="w-25 input-group-text m-0 p-0 d-flex justify-content-center" id="inputGroup-sizing-sm">%</span>
+                          </div>
+
+
+                          
                           <input
                             type="text"
                             name="dato3"
@@ -182,6 +190,7 @@ const {setSaveCotizacion}= useAuth()
                               <div className="col-4 text-center">
                                 <span>Abono Inicial: </span> <br /><span>{Math.round(cotaMensual * 100) / 100} </span>
                               </div>
+                      
                               <div className="col-4 text-center">
                                 <span>Tasa de interes mensual: </span> <br /><span>{Math.round(interesMensual * 100) / 100} </span>
                               </div>

@@ -1,12 +1,14 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Alert } from "./alert"
+import Success from "./Success"
+import Error from "./Error"
 import { login, signup, logout, loginWithGoogle, resetPassword } from "../firebase"
 import { useAuth } from '../context/AuthContext.js'
 
 
 export function Login() {
-  const { user } = useAuth()
+  const { user, success, setUserSuccess  } = useAuth()
 
   const [userLogin, setUser] = useState({
     email: "",
@@ -18,7 +20,7 @@ export function Login() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    login(userLogin.email, userLogin.password, navigate);
+    login(userLogin.email, userLogin.password, navigate, setUserSuccess);
   };
 
   const handleChange = ({ target: { value, name } }) =>
@@ -48,6 +50,8 @@ export function Login() {
   return (
 
     <div className="bg-secondary vh-100 d-flex flex-column justify-content-center align-items-center">
+  {success && <Success></Success>}
+  {success == false && <Error>ERROR: Verifique e intente nuevamente</Error>}
 
       <div className="w-full max-w-3xl m-auto">
         <h1 className="text-center font-bold my-4 text-md flex justify-between px-3">Bienvenido a CRIS (Créditos Interactivos Sistematizados)</h1>

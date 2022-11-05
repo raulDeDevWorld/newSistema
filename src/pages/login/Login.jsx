@@ -14,7 +14,7 @@ export function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
+    setError("");      
     try {
       await login(user.email, user.password);
       navigate("/");

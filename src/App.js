@@ -6,6 +6,7 @@ import Single from "./pages/single/Single";
 import New from "./pages/new/New";
 import Cotizar from "./components/cliente o promotor/Cotizar"
 import UserData from "./components/UserData"
+import SolicitudesData from "./components/SolicitudesData"
 import Datos from "./components/datos inmueble/Datos"
 import Solicitud from "./components/solicitud/Solicitud"
 import { BrowserRouter, Routes, Route } from "react-router-dom";
@@ -33,6 +34,7 @@ function App() {
           <Route path="Datos" element={<PrivateRoute isAllowed={user}><Datos /></PrivateRoute>}/>
           <Route path="Cotizar" element={<PrivateRoute isAllowed={user}><Cotizar /></PrivateRoute>}/>
           <Route path="UserData" element={<PrivateRoute isAllowed={user}><UserData /></PrivateRoute>}/>
+          <Route path="SolicitudesData" element={<PrivateRoute isAllowed={user}><SolicitudesData /></PrivateRoute>}/>
           <Route path="/" element={<PrivateRoute isAllowed={user}><Dashboard /></PrivateRoute>}/>
         </Routes>
     </div>

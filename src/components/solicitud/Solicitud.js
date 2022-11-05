@@ -1,9 +1,29 @@
 import "./style/Solicitud.css";
-import React from "react";
+import React, {useState} from "react";
 import Sidebar from "../sidebar/Sidebar";
 import Navbar from "../navbar/Navbar";
+import { writeUserData, removeData } from "../../firebase";
 import "../../../src/pages/home/home.scss";
+import { useAuth } from '../../context/AuthContext.js'
+
+
 export function Cotizar() {
+const { userDB } = useAuth()
+
+const [solicitudData, setSolicitudData] = useState({})
+const [card, setCard] = useState(false)
+
+
+
+  const handlerEventChange = (e) => {
+    setSolicitudData({...solicitudData, [e.target.name]: e.target.value})
+  }
+  const saveSolicitud = (e) => {
+    e.preventDefault()
+    writeUserData("/solicitudes/",  solicitudData.Nombres, solicitudData)
+    setCard(true)
+  }
+  
   return (
     <div className="home">
       <Sidebar />
@@ -49,93 +69,112 @@ export function Cotizar() {
                           <div></div>
                           <input
                             type="text"
-                            name="dato2"
+                            name="Nombres"
                             className="border-secondary form-control text-center"
                             placeholder="Nombres"
+                            onChange={handlerEventChange}
                           ></input>
                           <input
                             type="text"
-                            name="dato2"
+                            name="Apellidos"
                             className="border-secondary form-control text-center"
                             placeholder="Apellidos"
+                            onChange={handlerEventChange}
                           ></input><br />
-                           <select className="border-secondary rounded-1 p-1 text-center" id="cars" name="cars">
-                            <option value="volvo">Sexo</option>
-                            <option value="saab">Masculino</option>
-                            <option value="fiat">Femenino</option>
-                            <option value="audi">Indefinido</option>
+                           <select onChange={handlerEventChange} className="border-secondary rounded-1 p-1 text-center" id="cars" name="sexo">
+                            <option value="">Sexo</option>
+                            <option value="Masculino">Masculino</option>
+                            <option value="Femenino">Femenino</option>
+                            <option value="Indefinido">Indefinido</option>
                           </select><br />
                           <input
                             type="text"
-                            name="dato3"
+                            name="Cedula"
                             className="border-secondary form-control text-center"
                             placeholder="Cedula"
+                            onChange={handlerEventChange}
                           ></input><br />
                           <input
                             type="text"
-                            name="dato3"
+                            name="Fecha de nacimiento"
                             className="border-secondary form-control text-center"
                             placeholder="Fecha de nacimiento"
+                            onChange={handlerEventChange}
                           ></input><br />
 
-                          <select className="text-center border-secondary rounded-1 p-1" id="cars" name="cars">
-                            <option value="volvo">Estado migratorio</option>
-                            <option value="saab">Panameño</option>
-                            <option value="fiat">Extranjero - Residente Permanente</option>
-                            <option value="audi">Extranjero - Residente Temporal</option>
-                            <option value="audi">Extranjero - No Residente</option>
+                          <select onChange={handlerEventChange} className="text-center border-secondary rounded-1 p-1" id="cars" name="EstadoMigratorio">
+                            <option value="">Estado migratorio</option>
+                            <option value="Panameño">Panameño</option>
+                            <option value="Extranjero - Residente Permanente">Extranjero - Residente Permanente</option>
+                            <option value="Extranjero - Residente Temporal">Extranjero - Residente Temporal</option>
+                            <option value="Extranjero - No Residente">Extranjero - No Residente</option>
                           </select><br />
 
-                          <select className="text-center border-secondary rounded-1 p-1" id="cars" name="cars">
-                            <option value="volvo">Estado civil</option>
-                            <option value="saab">Soltero</option>
-                            <option value="fiat">Casado</option>
-                            <option value="audi">Unión Libre</option>
+                          <select onChange={handlerEventChange} className="text-center border-secondary rounded-1 p-1" id="cars" name="Estado Civil">
+                            <option value="">Estado civil</option>
+                            <option value="Soltero">Soltero</option>
+                            <option value="Casado">Casado</option>
+                            <option value="Unión Libre">Unión Libre</option>
                           </select><br />
-                          <select className="text-center border-secondary rounded-1 p-1" id="cars" name="cars">
-                            <option value="volvo">Tipo de ingresos</option>
-                            <option value="saab">Asalariado</option>
-                            <option value="fiat">Independiente</option>
+                          <select onChange={handlerEventChange} className="text-center border-secondary rounded-1 p-1" id="cars" name="Tipo de ingresos">
+                            <option value="">Tipo de ingresos</option>
+                            <option value="Asalariado">Asalariado</option>
+                            <option value="Independiente">Independiente</option>
                        
                           </select><br />
 
                           <input
                             type="text"
-                            name="dato3"
+                            name="Tiempo de servicios"
                             className="border-secondary form-control text-center"
                             placeholder="Tiempo de servicios"
+                            onChange={handlerEventChange}
                           ></input><br />
-                          <select className="text-center rounded-1 p-1" id="cars" name="cars">
-                            <option value="volvo">Tipo de propiedad</option>
-                            <option value="saab">Nueva Interés Regular (+180,000)</option>
-                            <option value="fiat">Vivienda Nueva Interés Preferencial (hasta 180,000)</option>
-                            <option value="audi">Segundo Uso</option>
+                          <select  onChange={handlerEventChange} className="text-center rounded-1 p-1" id="cars" name="Tipo de propiedad">
+                            <option value="">Tipo de propiedad</option>
+                            <option value="Nueva Interés Regular (+180,000)">Nueva Interés Regular (+180,000)</option>
+                            <option value="Vivienda Nueva Interés Preferencial (hasta 180,000)">Vivienda Nueva Interés Preferencial (hasta 180,000)</option>
+                            <option value="Segundo Uso">Segundo Uso</option>
                           </select><br />
-                          <select className="text-center rounded-1 p-1" id="cars" name="cars">
-                            <option value="volvo">Proposito de compra</option>
-                            <option value="saab">Vivienda Principal</option>
-                            <option value="fiat">Veraneo/Vacacional</option>
-                            <option value="audi">Inversión</option>
-                            <option value="audi">Traslado y Préstamo con Garantía Hipotecaria</option>
+                          <select onChange={handlerEventChange} className="text-center rounded-1 p-1" id="cars" name="Proposito de compra">
+                            <option value="">Proposito de compra</option>
+                            <option value="Vivienda Principal">Vivienda Principal</option>
+                            <option value="Veraneo/Vacacional">Veraneo/Vacacional</option>
+                            <option value="Inversión">Inversión</option>
+                            <option value="Traslado y Préstamo con Garantía Hipotecaria">Traslado y Préstamo con Garantía Hipotecaria</option>
                           </select><br />
-                          <input
-                            type="text"
-                            name="dato3"
-                            className="border-secondary form-control text-center"
-                            placeholder="Ingreso Mensula"
-                          ></input><br />
-                          <input
-                            type="text"
-                            name="dato3"
-                            className="border-secondary form-control text-center"
-                            placeholder="Precio de ventas"
-                          ></input><br />
-                          <input
-                            type="text"
-                            name="dato3"
-                            className="border-secondary form-control text-center"
-                            placeholder="Abono inicial sujerido"
-                          ></input>
+
+
+                          <div class="d-flex justify-content-center align-items-center mb-3">
+                          <span class="w-25 input-group-text m-0 p-2 d-flex justify-content-center" id="inputGroup-sizing-sm">$</span>
+                            <input type="text"
+                              name="Ingreso mensual"
+                              className="w-100 border-secondary form-control  text-center p-2 m-0"
+                              placeholder="Tasa de interes anual $" 
+                              onChange={handlerEventChange}/>
+                          </div>
+
+
+                          <div class="d-flex justify-content-center align-items-center mb-3">
+                          <span class="w-25 input-group-text m-0 p-2 d-flex justify-content-center" id="inputGroup-sizing-sm">$</span>
+                            <input type="text"
+                              name="Precio de ventas"
+                              className="w-100 border-secondary form-control  text-center p-2 m-0"
+                              placeholder="Precio de ventas"
+                            onChange={handlerEventChange}/>
+                          </div>
+
+
+                          <div class="d-flex justify-content-center align-items-center mb-3">
+                          <span class="w-25 input-group-text m-0 p-2 d-flex justify-content-center" id="inputGroup-sizing-sm">$</span>
+                            <input type="text"
+                              name="Abono inicial sugerido"
+                              className="w-100 border-secondary form-control  text-center p-2 m-0"
+                              placeholder="Abono inicial sujerido"
+                            onChange={handlerEventChange}/>
+                          </div>
+                          <br />
+                          
                         </div>
                         <br />
                         <div class="form-check">
@@ -144,9 +183,32 @@ export function Cotizar() {
                             Acepto que se verifique mis referencias de credito al cpmpletar esta solicitud.
                           </label>
                         </div><br />
-                        <button className="btn-Cotizador col-6 btn btn-primary rounded-5 mb-5">Continuar</button>
+                        <button onClick={saveSolicitud} className="btn-Cotizador col-6 btn btn-primary rounded-5 mb-5">Continuar</button>
                       </div>
                     </form>
+                    {card == true &&
+                          <div className={"container card card-body shadow"}>
+                            <div className="row">
+                              <div className="col-4 text-center">
+                                <span>Nombres </span> <br /><span>{solicitudData.Nombres}</span>
+                              </div>
+                              <div className="col-4 text-center">
+                                <span>Cedula </span> <br /><span>{solicitudData.Cedula}</span>
+                              </div>
+                              <div className="col-4 text-center">
+                                <span>Sexo </span> <br /><span>{solicitudData.sexo} </span>
+                              </div>
+                              <div className="col-4 text-center">
+                                <span>Ingreso Mensual</span> <br /><span>{solicitudData["Ingreso mensual"]} </span>
+                              </div>
+                              <div className="col-4 text-center">
+                                <span>Precio de ventas </span> <br /><span>{solicitudData["Precio de ventas"]} </span>
+                              </div>
+                              <div className="col-4 text-center">
+                                <span>Abono inicial sugerido </span> <br /><span>{solicitudData["Abono inicial sugerido"]} </span>
+                              </div>
+                            </div>
+                          </div>}
                   </div>
                 </div>
               </div>

@@ -99,7 +99,7 @@ const Sidebar = () => {
             </Link>
           </li>
           <p className="title">Listas</p>
-          <Link to="/UserData" style={{ textDecoration: "none" }}>
+          <Link to="/SolicitudesData" style={{ textDecoration: "none" }}>
             <li>
               <FormatAlignLeftIcon className="icon" />
               <span>Historial de solicitudes</span>

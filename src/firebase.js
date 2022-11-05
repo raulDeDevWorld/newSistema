@@ -102,9 +102,9 @@ function logout ( setUser) {
 
 const db = getDatabase(app);
 
-function writeUserData (object) {
-  console.log("hello")
-  set(ref(db, '/cotizaciones/' + object.nombreDeLaPropiedad.replace(" ","")), object )
+function writeUserData (url, complemento, object) {
+  console.log(object)
+  set(ref(db, url + complemento), object )
   .then(()=> console.log("saved"))
   .catch(()=> console.log('repeat'))
 }
@@ -129,8 +129,8 @@ function getData(setUserData) {
   });
 }
 
-async function removeDataItem (data, setUserData) {
-  await remove(ref(db, '/cotizaciones/' + data))
+async function removeDataItem (url, data, setUserData) {
+  await remove(ref(db, url + data))
   getData(setUserData)
 }
 

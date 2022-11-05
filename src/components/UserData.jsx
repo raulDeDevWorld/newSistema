@@ -10,7 +10,7 @@ export function UserData() {
     const { userDB, setUserData } = useAuth()
 
     const remove = (item) => {
-        removeDataItem(item, setUserData)
+        removeDataItem("cotizaciones", item, setUserData)
     }
     return (
         <table className="table h-100">

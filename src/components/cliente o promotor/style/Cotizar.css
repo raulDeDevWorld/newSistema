@@ -4,7 +4,7 @@
 }
 .my-flex :nth-child(n) {
   width: 45%;
-  height: 40px;
+  min-height: 40px;
   margin: 5px;
 }
 .card:hover {

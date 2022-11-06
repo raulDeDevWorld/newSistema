@@ -23,7 +23,7 @@ const firebaseConfig = {
 // Initialize Firebase
 
 
-export const app = initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
 
 // Firebase Autentication
 
@@ -135,4 +135,4 @@ async function removeDataItem (url, data, setUserData) {
 }
 
 
-export {onAuth, login, signup, logout, loginWithGoogle, resetPassword, writeUserData, removeData, removeDataItem  }
+export {app, onAuth, login, signup, logout, loginWithGoogle, resetPassword, writeUserData, removeData, removeDataItem  }

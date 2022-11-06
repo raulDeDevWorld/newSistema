@@ -104,8 +104,6 @@ const Sidebar = () => {
               <FormatAlignLeftIcon className="icon" />
               <span>Historial de solicitudes</span>
             </li>
-            </Link>
-            <Link to="/UserData" style={{ textDecoration: "none" }}>
             <li>
               <BookmarksIcon className="icon" />
               <span>Cotizaciones Guardadas</span>

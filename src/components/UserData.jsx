@@ -18,10 +18,10 @@ export function UserData() {
                 <tr>
                     <th>#</th>
                     <th>Nombre de la propiedad</th>
-                    <th>Precio de venta</th>
-                    <th>Monto de prestamo</th>
-                    <th>Tasa de interes anual</th>
                     <th>Plazo en meses</th>
+                    <th>Abono inicial</th>
+                    <th>Tasa de interes mensual</th>
+                    <th>Meses de financiamiento</th>
                     <th>Borrar</th>
                 </tr>
             </thead>
@@ -32,9 +32,9 @@ export function UserData() {
                     <tr>
                         <th scope="row">{index}</th>
                         <td>{item}</td>
-                        <td>{userDB.cotizaciones[item].precioDeVenta}</td>
-                        <td>{userDB.cotizaciones[item].montoDePrestamo}</td>
-                        <td>{userDB.cotizaciones[item].tasaDeinteresAnual}</td>
+                        <td>{userDB.cotizaciones[item].plazoEnMeses}</td>
+                        <td>{userDB.cotizaciones[item].abonoInicial}</td>
+                        <td>{userDB.cotizaciones[item].tasaDeinteresMensual}</td>
                         <td>{userDB.cotizaciones[item].plazoEnMeses}</td>
                         <td><button type="button" class="btn btn-danger"  onClick={()=>remove(item)}>Eliminar</button></td>
                     </tr>

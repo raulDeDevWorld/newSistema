@@ -17,11 +17,11 @@ export function SolicitudesData() {
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>Nombre de la propiedad</th>
-                    <th>Precio de venta</th>
-                    <th>Monto de prestamo</th>
+                    <th>Nombre del solicitante</th>
+                    <th>Apellidos</th>
+                    <th>Cedula</th>
                     <th>Tasa de interes anual</th>
-                    <th>Plazo en meses</th>
+                    <th>Precio de venta</th>
                     <th>Borrar</th>
                 </tr>
             </thead>
@@ -31,11 +31,10 @@ export function SolicitudesData() {
                 return <tbody>
                     <tr>
                         <th scope="row">{index}</th>
-                        <td>{item}</td>
                         <td>{userDB.solicitudes[item].Nombres}</td>
+                        <td>{userDB.solicitudes[item].Apellidos}</td>
                         <td>{userDB.solicitudes[item].Cedula}</td>
-                        <td>{userDB.solicitudes[item].sexo}</td>
-                        <td>{userDB.solicitudes[item]["Proposito de compra"]}</td>
+                        <td>{userDB.solicitudes[item]["Tasa de interes anual"]}</td>
                         <td>{userDB.solicitudes[item]["Precio de ventas"]}$</td>
                         <td><button type="button" class="btn btn-danger"  onClick={()=>remove(item)}>Eliminar</button></td>
                     </tr>

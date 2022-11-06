@@ -4,30 +4,37 @@ import Sidebar from "../sidebar/Sidebar";
 import Navbar from "../navbar/Navbar";
 import { writeUserData, removeData } from "../../firebase";
 import { uploadIMG } from "../../storageFB";
+import Success from "../Success";
 
 import "../../../src/pages/home/home.scss";
 import { useAuth } from '../../context/AuthContext.js'
 
 
 export function Cotizar() {
-  const { userDB, setUserSuccess } = useAuth()
+  const { userDB, setUserSuccess, success, postsIMG, setUserPostsIMG } = useAuth()
 
   const [solicitudData, setSolicitudData] = useState({})
-  const [card, setCard] = useState(false)
+  const [preAprobacion, setPreAprobacion] = useState(false)
+  const [datosComplementarios, setDatosComplementarios] = useState(false)
+  const [cargarDocumentos, setCargarDocumentos] = useState(false)
+
 
   function handlerUploadFile(e) {
     const fileName = e.target.name
     const file = e.target.files[0]
-    uploadIMG(file, fileName, setUserSuccess)
+    uploadIMG(file, `${solicitudData.Cedula}${fileName}`, setUserSuccess, postsIMG, setUserPostsIMG)
   }
-
+  console.log(postsIMG)
   const handlerEventChange = (e) => {
     setSolicitudData({ ...solicitudData, [e.target.name]: e.target.value })
   }
-  const saveSolicitud = (e) => {
+  const saveSolicitud = (e, letter) => {
     e.preventDefault()
     writeUserData("/solicitudes/", solicitudData.Nombres, solicitudData)
-    setCard(true)
+    if (letter == "solicitud") setPreAprobacion(true)
+    if (letter == "preAprobacion") setDatosComplementarios(true)
+    if (letter == "datosComplementarios") setCargarDocumentos(true)
+
   }
   const handlerEventeChange = e => {
     setSolicitudData({ ...solicitudData, [e.target.name]: e.target.value })
@@ -35,7 +42,8 @@ export function Cotizar() {
   return (
     <div className="home">
       <Sidebar />
-      <div className="homeContainer">
+{   success == "Cargando" &&   <Success> Cargando</Success>
+}      <div className="homeContainer">
         <Navbar />
         <div className="widgets">
           <div className="container w-100%">
@@ -156,9 +164,9 @@ export function Cotizar() {
                           <div class="d-flex justify-content-center align-items-center mb-3">
                             <span class="w-25 input-group-text m-0 p-2 d-flex justify-content-center" id="inputGroup-sizing-sm">$</span>
                             <input type="text"
-                              name="Ingreso mensual"
+                              name="Tasa de interes anual"
                               className="w-100 border-secondary form-control  text-center p-2 m-0"
-                              placeholder="Tasa de interes anual $"
+                              placeholder="Tasa de interes anual"
                               onChange={handlerEventChange} />
                           </div>
 
@@ -191,10 +199,10 @@ export function Cotizar() {
                             Acepto que se verifique mis referencias de credito al cpmpletar esta solicitud.
                           </label>
                         </div><br />
-                        <button onClick={saveSolicitud} className="btn-Cotizador col-6 btn btn-primary rounded-5 mb-5">Continuar</button>
+                        <button onClick={(e) => saveSolicitud(e, "solicitud")} className="btn-Cotizador col-6 btn btn-primary rounded-5 mb-5">Continuar</button>
                       </div>
                     </form>
-                    {card == true &&
+                    {preAprobacion == "no sirve" &&
                       <div className={"container card card-body shadow"}>
                         <div className="row">
                           <div className="col-4 text-center">
@@ -218,26 +226,26 @@ export function Cotizar() {
                         </div>
                       </div>}
 
-                      <div className={"container card card-body shadow p-5"}>
-                    <h3>Pre-Aprobacion</h3>
-                    <p>Genial, estas pre-aprobado finaliza tu solicitud </p>
+                    {preAprobacion == true && <div className={"container card card-body shadow p-5"}>
+                      <h3>Pre-Aprobacion</h3>
+                      <p>Genial, estas pre-aprobado finaliza tu solicitud </p>
 
-                    <p>Letra</p>
-                    <p>Plazo</p>
-                    <p>Taza</p>
-                    <form action="" className="w-100 h3 btn-Cotizador text-light p-3 round-3">
-                      <p className="text-center">¿Ya eligio propiedad?</p>
-                      <div className="text-center">
-                        <button className="w-25 btn btn-outline-info m-2">Si</button>
-                        <button className="w-25 btn btn-outline-info m-2">No</button>
-                      </div>
+                      <p>Letra</p>
+                      <p>Plazo</p>
+                      <p>Taza</p>
+                      <form action="" className="w-100 h3 btn-Cotizador text-light p-3 round-3">
+                        <p className="text-center">¿Ya eligio propiedad?</p>
+                        <div className="text-center">
+                          <button className="w-25 btn btn-outline-info m-2" onClick={(e) => saveSolicitud(e, "preAprobacion")} >Si</button>
+                          <button className="w-25 btn btn-outline-info m-2" onClick={(e) => saveSolicitud(e, "preAprobacion")}>No</button>
+                        </div>
 
-                    </form>
-                     </div>
+                      </form>
+                    </div>}
 
 
 
-                    <div className={"container card card-body shadow p-5"}>
+                    {datosComplementarios == true && <div className={"container card card-body shadow p-5"}>
 
                       <form action="">
                         <h3>Datos complementarios</h3>
@@ -311,55 +319,65 @@ export function Cotizar() {
                           </div>
                         </div>
                         <div className="w-100 text-center">
-                          <button className="btn-Cotizador col-6 btn btn-primary rounded-5 mb-5"> Guardar </button>
+                          <button className="btn-Cotizador col-6 btn btn-primary rounded-5 mb-5" onClick={(e) => saveSolicitud(e, "datosComplementarios")}> Guardar </button>
                         </div>
 
                       </form>
 
 
 
-                    </div>
+                    </div>}
+
+
+                    {cargarDocumentos == true && <div className={"container card card-body shadow p-5"}>
+                      <form action="" className=" w-100 d-flex flex-wrap">
+                        <h3 className=" w-100">Cargar Documentos</h3>
+
+                        <div className="w-50 text-center">
+                          <label htmlFor="IdentificacionUno" className="w-75 btn btn-Cotizador btn-lg mb-3 text-light" >Subir identificacion 1 </label>
+                          <input type="file" id="IdentificacionUno" name="Identificacion 1" style={{ display: "none" }} onChange={handlerUploadFile} accept="images" />
+                          <img src={postsIMG[`${solicitudData.Cedula}Identificacion 1`]} style={{width: "50%", height: "400px", objectFit: "cover",  marginBottom: "15px"}} alt="" />
+                        </div>
+                        <div className="w-50 text-center">
+                          <label htmlFor="Identificacion2" className="w-75 btn btn-Cotizador btn-lg mb-3 text-light" >Subir identificacion 2 </label>
+                          <input type="file" id="Identificacion2" name="Identificacion 2" style={{ display: "none" }} onChange={handlerUploadFile} accept="images" />
+                          <img src={postsIMG[`${solicitudData.Cedula}Identificacion 2`]} style={{width: "50%", height: "400px", objectFit: "cover",  marginBottom: "15px"}} alt="" />
+                        </div>
+                        <div className="w-50 text-center">
+                          <label htmlFor="CartaDeTrabajo" className="w-75 btn btn-Cotizador btn-lg mb-3 text-light" >Subir carta de trabajo </label>
+                          <input type="file" id="CartaDeTrabajo" name="Carta de trabajo" style={{ display: "none" }} onChange={handlerUploadFile} accept="images" />
+                          <img src={postsIMG[`${solicitudData.Cedula}Carta de trabajo`]} style={{width: "50%", height: "400px", objectFit: "cover",  marginBottom: "15px"}} alt="" />
+                        </div>
+                        <div className="w-50 text-center">
+                          <label htmlFor="FichaCSS" className="w-75 btn btn-Cotizador btn-lg mb-3 text-light" >Subir ficha de C.S.S </label>
+                          <input type="file" id="FichaCSS" name="FichaCSS" style={{ display: "none" }} onChange={handlerUploadFile} accept="images" />
+                          <img src={postsIMG[`${solicitudData.Cedula}FichaCSS`]} style={{width: "50%", height: "400px", objectFit: "cover",  marginBottom: "15px"}} alt="" />
+                        </div>
+                        <div className="w-50 text-center">
+                          <label htmlFor="Talonario1" className="w-75 btn btn-Cotizador btn-lg mb-3 text-light" >Talonario 1 </label>
+                          <input type="file" id="Talonario1" name="Talonario 1" style={{ display: "none" }} onChange={handlerUploadFile} accept="images" />
+                          <img src={postsIMG[`${solicitudData.Cedula}Talonario 1`]} style={{width: "50%", height: "400px", objectFit: "cover",  marginBottom: "15px"}} alt="" />
+                        </div>
+                        <div className="w-50 text-center">
+                          <label htmlFor="Talonario2" className="w-75 btn btn-Cotizador btn-lg mb-3 text-light">Talonario 2 </label>
+                          <input type="file" id="Talonario2" name="Talonario 2" style={{ display: "none" }} onChange={handlerUploadFile} accept="images" />
+                          <img src={postsIMG[`${solicitudData.Cedula}Talonario 2`]} style={{width: "50%", height: "400px", objectFit: "cover",  marginBottom: "15px"}} alt="" />           
+                        </div>
+                        <div className="w-50 text-center">
+                          <label htmlFor="Contrato" className="w-75 btn btn-Cotizador btn-lg mb-3 text-light" >Subir contrato o proforma </label>
+                          <input type="file" id="Contrato" name="Contrato" style={{ display: "none" }} onChange={handlerUploadFile} accept="images" />
+                          <img src={postsIMG[`${solicitudData.Cedula}Contrato`]} style={{width: "50%", height: "400px", objectFit: "cover",  marginBottom: "15px"}} alt="" />
+                        </div>
+                        <div className="w-100 text-center">
+                          <button className="btn-Cotizador col-6 btn btn-primary rounded-5 mb-5" onClick={(e) => saveSolicitud(e, "datosComplementarios")}>Enviar solicitud</button>
+                        </div>
+                      </form>
+                    </div>}
 
 
 
-                    <div className={"container card card-body shadow p-5"}>
-                    <form action="" className=" w-100 d-flex flex-wrap">
-                      <h3 className=" w-100">Cargar Documentos</h3>
 
-                      <div className="w-50">
-                        <label htmlFor="IdentificacionUno" className="w-75 btn btn-Cotizador btn-lg mb-3 text-light" >Subir identificacion 1 </label>
-                        <input type="file" id="IdentificacionUno" name="Identificacion 1" style={{ display: "none" }} onChange={handlerUploadFile} accept="images" />
-                        <img src="" alt="" />
-                      </div>
-                      <div className="w-50">
-                        <label htmlFor="Identificacion2" className="w-75 btn btn-Cotizador btn-lg mb-3 text-light" >Subir identificacion 2 </label>
-                        <input type="file" id="Identificacion2" name="Identificacion 2" style={{ display: "none" }} onChange={handlerUploadFile} accept="images" />
-                      </div>
-                      <div className="w-50">
-                        <label htmlFor="CartaDeTrabajo" className="w-75 btn btn-Cotizador btn-lg mb-3 text-light" >Subir carta de trabajo </label>
-                        <input type="file" id="CartaDeTrabajo" name="Carta de trabajo" style={{ display: "none" }} onChange={handlerUploadFile} accept="images" />
-                      </div>
-                      <div className="w-50">
-                        <label htmlFor="FichaCSS" className="w-75 btn btn-Cotizador btn-lg mb-3 text-light" >Subir ficha de C.S.S </label>
-                        <input type="file" id="FichaCSS" name="FichaCSS" style={{ display: "none" }} onChange={handlerUploadFile} accept="images" />
-                      </div>
-                      <div className="w-50">
-                        <label htmlFor="Talonario1" className="w-75 btn btn-Cotizador btn-lg mb-3 text-light" >Talonario 1 </label>
-                        <input type="file" id="Talonario1" name="Talonario 1" style={{ display: "none" }} onChange={handlerUploadFile} accept="images" />
-                      </div>
-                      <div className="w-50">
-                        <label htmlFor="Talonario2" className="w-75 btn btn-Cotizador btn-lg mb-3 text-light">Talonario 2 </label>
-                        <input type="file" id="Talonario2" name="Talonario 2" style={{ display: "none" }} onChange={handlerUploadFile} accept="images" />
-                      </div>
-                      <div className="w-50">
-                        <label htmlFor="Contrato" className="w-75 btn btn-Cotizador btn-lg mb-3 text-light" >Subir contrato o proforma </label>
-                        <input type="file" id="Contrato" name="Contrato" style={{ display: "none" }} onChange={handlerUploadFile} accept="images" />
-                      </div>
-                      <div className="w-100 text-center">
-                        <button className="btn-Cotizador col-6 btn btn-primary rounded-5 mb-5">Enviar solicitud</button>
-                      </div>
-                    </form>
-                    </div>
+
                   </div>
                 </div>
               </div>

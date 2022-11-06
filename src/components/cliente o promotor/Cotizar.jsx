@@ -7,6 +7,7 @@ import { useAuth } from '../../context/AuthContext.js'
 
 
 export function Cotizar() {
+  const [allData, setAllData] = useState({})
   const [montoDePrestamo, setMontoDePrestamo] = useState(null)
   const [plazoEnMeses, setPlazoEnMeses] = useState(null)
   const [tasaDeinteresAnual, setTasaDeinteresAnual] = useState("")
@@ -35,8 +36,9 @@ export function Cotizar() {
       tipoDePropiedad: e.target.form[7].value,
       propositoDeCompra: e.target.form[8].value,
       estadoMigratorio: e.target.form[9].value,
+      tasaDeinteresMensual: interesMensual,
     }
-    console.log(object)
+    setAllData(object)
     writeUserData("/cotizaciones/", object.nombreDeLaPropiedad.replace(" ", ""), object)
     setSaveCotizacion(true)
 
@@ -219,7 +221,7 @@ export function Cotizar() {
                               </div>
 
                               <div className="col-4 text-center">
-                                <span>Tasa de interes mensual: </span> <br /><span>{Math.round(interesMensual * 100) / 100} </span>
+                                <span>Tasa de interes mensual: </span> <br /><span>{Math.round(interesMensual * 100000) / 100000} </span>
                               </div>
                               <div className="col-4 text-center">
                                 <span>Pago mensual: </span> <br /><span>{Math.round(cotaMensual * 100) / 100} </span>

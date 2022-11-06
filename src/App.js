@@ -27,7 +27,7 @@ function App() {
     <div className={darkMode ? "app dark" : "app"}>
       
         <Routes>
-          <Route path="Login2" element={<Login2 />} />
+          <Route path="Login2" element={<PrivateRoute isAllowed={user}><Login2 /></PrivateRoute>}/>
           <Route path="Login" element={<Login />} />
           <Route path="Register" element={<Register />} />
           <Route path="Solicitud" element={<PrivateRoute isAllowed={user}><Solicitud /></PrivateRoute>}/>

@@ -5,7 +5,8 @@ const storage = getStorage(app)
 
 //--------------------------- Firebase Storage ---------------------------
 function uploadIMG(file, fileName, setUserSuccess, postsIMG, setUserPostsIMG) {
-    const imagesRef = ref(storage, `${fileName}`);
+    console.log("img")
+    const imagesRef = ref(storage, fileName);
     uploadBytes(imagesRef, file).then((snapshot) => {
         setUserSuccess("Cargando")
         getList(postsIMG, setUserPostsIMG)

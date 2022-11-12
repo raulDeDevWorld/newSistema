@@ -20,14 +20,16 @@ export function Cotizar() {
   const [datosComplementarios, setDatosComplementarios] = useState(false)
   const [cargarDocumentos, setCargarDocumentos] = useState(false)
   const [check, setCheck] = useState(false)
+  const [photos, setPhotos] = useState({})
 
 
   function handlerUploadFile(e) {
     const fileName = e.target.name
     const file = e.target.files[0]
+    file !== undefined && setPhotos({...photos, [fileName]: file})
     uploadIMG(file, `${solicitudData.Cedula}${fileName}`, setUserSuccess, postsIMG, setUserPostsIMG)
   }
-  console.log(Object.keys(postsIMG).length)
+  console.log(photos)
   const handlerEventChange = (e) => {
     setSolicitudData({ ...solicitudData, [e.target.name]: e.target.value })
   }
@@ -43,7 +45,7 @@ export function Cotizar() {
     if (letter === "solicitud") { soli.length == 14 && check === true ? setPreAprobacion(true) : setUserSuccess("Complete") }
     if (letter == "preAprobacion") { setDatosComplementarios(true) }
     if (letter == "datosComplementarios") { solicitudData["Direccion Actual"] && solicitudData[check === true && "Numero de Celular REF1"] && solicitudData["Numero de Celular REF2"] && solicitudData["Numero de Celular REF3"] && solicitudData["Nombre Completo REF1"] && solicitudData["Nombre Completo REF2"] && solicitudData["Nombre Completo REF3"] ? setCargarDocumentos(true) : setUserSuccess("Complete") }
-    if (letter == "SaveAll") { soli.length > 14 && solicitudData["Numero de Celular REF1"] && solicitudData["Numero de Celular REF2"] && solicitudData["Numero de Celular REF3"] && solicitudData["Nombre Completo REF1"] && solicitudData["Nombre Completo REF2"] && solicitudData["Nombre Completo REF3"] && check === true && Object.keys(postsIMG).length === 17 ? setUserSuccess("Save") : setUserSuccess("Complete") }
+    if (letter == "SaveAll") { soli.length > 14 && solicitudData["Numero de Celular REF1"] && solicitudData["Numero de Celular REF2"] && solicitudData["Numero de Celular REF3"] && solicitudData["Nombre Completo REF1"] && solicitudData["Nombre Completo REF2"] && solicitudData["Nombre Completo REF3"] && check === true && Object.keys(photos).length > 6 ? setUserSuccess("Save") : setUserSuccess("Complete") }
 
   }
   const handlerEventeChange = e => {

@@ -53,7 +53,7 @@ export function Cotizar() {
     const cotaMes = p / ((1 - Math.pow((1 + i), -(n))) / i)
     console.log(cotaMes)
     setMontoDePrestamo(e.target.form[4].value)
-    setPlazoEnMeses(e.target.form[6].value)
+    setPlazoEnMeses(e.target.form[6].value * 12)
     setTasaDeinteresAnual(e.target.form[5].value)
 
     setInteresMensual(i)

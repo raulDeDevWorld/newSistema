@@ -16,26 +16,37 @@ export function Cotizar() {
   const { userDB, setUserSuccess, success, postsIMG, setUserPostsIMG } = useAuth()
 
   const [solicitudData, setSolicitudData] = useState({})
+  const [solicitudData2, setSolicitudData2] = useState({})
   const [preAprobacion, setPreAprobacion] = useState(false)
   const [datosComplementarios, setDatosComplementarios] = useState(false)
   const [cargarDocumentos, setCargarDocumentos] = useState(false)
   const [check, setCheck] = useState(false)
   const [photos, setPhotos] = useState({})
+  const [checkNewSolicitud, setCheckNewSolicitud] = useState(false)
 
 
   function handlerUploadFile(e) {
     const fileName = e.target.name
     const file = e.target.files[0]
-    file !== undefined && setPhotos({...photos, [fileName]: file})
+    file !== undefined && setPhotos({ ...photos, [fileName]: file })
     uploadIMG(file, `${solicitudData.Cedula}${fileName}`, setUserSuccess, postsIMG, setUserPostsIMG)
   }
   console.log(photos)
   const handlerEventChange = (e) => {
     setSolicitudData({ ...solicitudData, [e.target.name]: e.target.value })
   }
+  const handlerEventChange2 = (e) => {
+    setSolicitudData2({ ...solicitudData2, [e.target.name]: e.target.value })
+  }
   const handlerEventChangeCheck = (e) => {
     setCheck(!check)
   }
+  const handleCheckSolicitud = (e) => {
+    const data = e.target.value
+    setCheckNewSolicitud(data)
+  }
+  
+  console.log(checkNewSolicitud)
 
   const saveSolicitud = (e, letter) => {
     e.preventDefault()
@@ -79,23 +90,50 @@ export function Cotizar() {
 
 
                   <div className="card border-0">
+
+
+
+
+
+
+
+
                     <form className="m-1">
+
+
+
+
+
+
+
+
+
+
+
+
+
                       <div className="card card-body shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                        <div className="my-flex-solicitud p-5 form-group">
-                          <div>
-                            <label for="cars">Cantidad de solicitantes</label><br />
-                            <div className="d-flex">
-                              <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1" />
-                                <label class="form-check-label" for="inlineRadio1">1</label>
-                              </div>
-                              <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2" />
-                                <label class="form-check-label" for="inlineRadio2">2</label>
-                              </div>
+                        <br />
+                        <div className="text-center">
+                          <label for="cars">Cantidad de solicitantes</label><br />
+                          <form className="d-flex justify-content-center" >
+                            <div class="form-check form-check-inline">
+                              <input class="form-check-input" type="radio" onChange={handleCheckSolicitud} name="inlineRadioOptions" id="inlineRadio1" value="false" />
+                              <label class="form-check-label" for="inlineRadio1">1</label>
                             </div>
-                          </div>
-                          <div></div>
+                            <div class="form-check form-check-inline">
+                              <input class="form-check-input" type="radio" onChange={handleCheckSolicitud} name="inlineRadioOptions" id="inlineRadio2" value="true" />
+                              <label class="form-check-label" for="inlineRadio2">2</label>
+                            </div>
+                          </form>
+                        </div>
+
+
+
+
+
+                        <div className="my-flex-solicitud p-5 form-group">
+
                           <br />
                           <label>SOLICITANTE Nº1</label><br />
                           <div></div>
@@ -132,7 +170,6 @@ export function Cotizar() {
                             <p className={solicitudData.sexo ? "text-success w-100 text-center" : "text-danger w-100 text-center"}>{solicitudData.sexo ? "Correcto" : "*Debe seleccionar una opcion"}</p>
                           </div>
 
-
                           <div className="d-flex flex-wrap mb-3">
                             <input
                               type="text"
@@ -143,8 +180,6 @@ export function Cotizar() {
                             ></input>
                             <p className={solicitudData.Cedula ? "text-success w-100 text-center" : "text-danger w-100 text-center"}>{solicitudData.Cedula && solicitudData.Cedula.length ? "Correcto" : "*Debe rellenar el formulario"}</p>
                           </div>
-
-
 
                           <div className="d-flex flex-wrap mb-3">
                             <input
@@ -168,9 +203,6 @@ export function Cotizar() {
                             <p className={solicitudData["Estado Migratorio"] ? "text-success w-100 text-center" : "text-danger w-100 text-center"}>{solicitudData["Estado Migratorio"] ? "Correcto" : "*Debe seleccionar una opcion"}</p>
                           </div>
 
-
-
-
                           <div className="d-flex flex-wrap mb-3">
 
                             <select onChange={handlerEventChange} className="text-center border-secondary rounded-1 p-2 w-100" id="cars" name="Estado Civil">
@@ -182,12 +214,7 @@ export function Cotizar() {
                             <p className={solicitudData["Estado Civil"] ? "text-success w-100 text-center" : "text-danger w-100 text-center"}>{solicitudData["Estado Civil"] ? "Correcto" : "*Debe seleccionar una opcion"}</p>
                           </div>
 
-
-
-
-
                           <div className="d-flex flex-wrap mb-3">
-
 
                             <select onChange={handlerEventChange} className="text-center border-secondary rounded-1 p-2 w-100" id="cars" name="Tipo de ingresos">
                               <option value="">Tipo de ingresos</option>
@@ -209,7 +236,6 @@ export function Cotizar() {
                             <p className={solicitudData["Tiempo de servicios"] ? "text-success w-100 text-center" : "text-danger w-100 text-center"}>{solicitudData["Tiempo de servicios"] && solicitudData["Tiempo de servicios"].length ? "Correcto" : "*Debe rellenar el formulario"}</p>
                           </div>
 
-
                           <div className="d-flex flex-wrap mb-3">
                             <select onChange={handlerEventChange} className="text-center rounded-1 p-2 w-100" id="cars" name="Tipo de propiedad">
                               <option value="">Tipo de propiedad</option>
@@ -219,8 +245,6 @@ export function Cotizar() {
                             </select><br />
                             <p className={solicitudData["Tipo de propiedad"] ? "text-success w-100 text-center" : "text-danger w-100 text-center"}>{solicitudData["Tipo de propiedad"] ? "Correcto" : "*Debe seleccionar una opcion"}</p>
                           </div>
-
-
 
                           <div className="d-flex flex-wrap mb-3">
                             <select onChange={handlerEventChange} className="text-center rounded-1 p-2 w-100" id="cars" name="Proposito de compra">
@@ -232,9 +256,6 @@ export function Cotizar() {
                             </select>
                             <p className={solicitudData["Proposito de compra"] ? "text-success w-100 text-center" : "text-danger w-100 text-center"}>{solicitudData["Proposito de compra"] ? "Correcto" : "*Debe seleccionar una opcion"}</p>
                           </div>
-
-
-
 
                           <div className="d-flex flex-wrap mb-3">
                             <div class="d-flex justify-content-center align-items-center mb-0 w-100">
@@ -248,7 +269,6 @@ export function Cotizar() {
                             <p className={solicitudData["Tasa de interes anual"] ? "text-success w-100 text-center" : "text-danger w-100 text-center"}>{solicitudData["Tasa de interes anual"] && solicitudData["Tasa de interes anual"].length ? "Correcto" : "*Debe rellenar el formulario"}</p>
                           </div>
 
-
                           <div className="d-flex flex-wrap mb-3">
                             <div class="d-flex justify-content-center align-items-center mb-0 w-100">
                               <span class="w-25 input-group-text m-0 p-2 d-flex justify-content-center" id="inputGroup-sizing-sm">$</span>
@@ -260,7 +280,6 @@ export function Cotizar() {
                             </div>
                             <p className={solicitudData["Precio de ventas"] ? "text-success w-100 text-center" : "text-danger w-100 text-center"}>{solicitudData["Precio de ventas"] && solicitudData["Precio de ventas"].length ? "Correcto" : "*Debe rellenar el formulario"}</p>
                           </div>
-
 
                           <div className="d-flex flex-wrap mb-3">
                             <div class="d-flex justify-content-center align-items-center mb-0 w-100">
@@ -274,11 +293,178 @@ export function Cotizar() {
                             <p className={solicitudData["Abono inicial sugerido"] ? "text-success w-100 text-center" : "text-danger w-100 text-center"}>{solicitudData["Abono inicial sugerido"] && solicitudData["Abono inicial sugerido"].length ? "Correcto" : "*Debe rellenar el formulario"}</p>
                           </div>
 
-
-
                           <br />
                         </div>
+                        {
 
+
+                          checkNewSolicitud == 'true' && <div className="my-flex-solicitud p-5 form-group">
+
+                            <br />
+                            <label>SOLICITANTE Nº2</label><br />
+                            <div></div>
+
+                            <div className="d-flex flex-column mb-3">
+                              <input
+                                type="text"
+                                name="Nombres"
+                                className="border-secondary form-control text-center"
+                                placeholder="Nombres"
+                                onChange={handlerEventChange2}
+                              ></input>
+                              <p className={solicitudData.Nombres ? "text-success w-100 text-center" : "text-danger w-100 text-center"}>{solicitudData.Nombres && solicitudData.Nombres.length ? "Correcto" : "*Debe rellenar el formulario"}</p>
+                            </div>
+
+                            <div className="d-flex flex-column mb-3">
+                              <input
+                                type="text"
+                                name="Apellidos"
+                                className="border-secondary form-control text-center"
+                                placeholder="Apellidos"
+                                onChange={handlerEventChange2}
+                              ></input>
+                              <p className={solicitudData.Apellidos ? "text-success w-100 text-center" : "text-danger w-100 text-center"}>{solicitudData.Apellidos && solicitudData.Apellidos.length ? "Correcto" : "*Debe rellenar el formulario"}</p>
+                            </div>
+
+                            <div className="d-flex flex-wrap mb-3">
+                              <select onChange={handlerEventChange2} className="border-secondary rounded-1 p-2 text-center w-100" id="cars" name="sexo">
+                                <option value="">Sexo</option>
+                                <option value="Masculino">Masculino</option>
+                                <option value="Femenino">Femenino</option>
+                                <option value="Indefinido">Indefinido</option>
+                              </select>
+                              <p className={solicitudData.sexo ? "text-success w-100 text-center" : "text-danger w-100 text-center"}>{solicitudData.sexo ? "Correcto" : "*Debe seleccionar una opcion"}</p>
+                            </div>
+
+                            <div className="d-flex flex-wrap mb-3">
+                              <input
+                                type="text"
+                                name="Cedula"
+                                className="d-block border-secondary form-control text-center w-100"
+                                placeholder="Cedula"
+                                onChange={handlerEventChange2}
+                              ></input>
+                              <p className={solicitudData.Cedula ? "text-success w-100 text-center" : "text-danger w-100 text-center"}>{solicitudData.Cedula && solicitudData.Cedula.length ? "Correcto" : "*Debe rellenar el formulario"}</p>
+                            </div>
+
+                            <div className="d-flex flex-wrap mb-3">
+                              <input
+                                type="text"
+                                name="Fecha de nacimiento"
+                                className="d-block border-secondary form-control text-center w-100"
+                                placeholder="Fecha de nacimiento"
+                                onChange={handlerEventChange2}
+                              ></input><br />
+                              <p className={solicitudData["Fecha de nacimiento"] ? "text-success w-100 text-center" : "text-danger w-100 text-center"}>{solicitudData["Fecha de nacimiento"] && solicitudData["Fecha de nacimiento"].length ? "Correcto" : "*Debe rellenar el formulario"}</p>
+                            </div>
+
+                            <div className="d-flex flex-wrap mb-3">
+                              <select onChange={handlerEventChange2} className="text-center border-secondary rounded-1 p-2 w-100" id="cars" name="Estado Migratorio">
+                                <option value="">Estado migratorio</option>
+                                <option value="Panameño">Panameño</option>
+                                <option value="Extranjero - Residente Permanente">Extranjero - Residente Permanente</option>
+                                <option value="Extranjero - Residente Temporal">Extranjero - Residente Temporal</option>
+                                <option value="Extranjero - No Residente">Extranjero - No Residente</option>
+                              </select><br />
+                              <p className={solicitudData["Estado Migratorio"] ? "text-success w-100 text-center" : "text-danger w-100 text-center"}>{solicitudData["Estado Migratorio"] ? "Correcto" : "*Debe seleccionar una opcion"}</p>
+                            </div>
+
+                            <div className="d-flex flex-wrap mb-3">
+
+                              <select onChange={handlerEventChange2} className="text-center border-secondary rounded-1 p-2 w-100" id="cars" name="Estado Civil">
+                                <option value="">Estado civil</option>
+                                <option value="Soltero">Soltero</option>
+                                <option value="Casado">Casado</option>
+                                <option value="Unión Libre">Unión Libre</option>
+                              </select><br />
+                              <p className={solicitudData["Estado Civil"] ? "text-success w-100 text-center" : "text-danger w-100 text-center"}>{solicitudData["Estado Civil"] ? "Correcto" : "*Debe seleccionar una opcion"}</p>
+                            </div>
+
+                            <div className="d-flex flex-wrap mb-3">
+
+                              <select onChange={handlerEventChange2} className="text-center border-secondary rounded-1 p-2 w-100" id="cars" name="Tipo de ingresos">
+                                <option value="">Tipo de ingresos</option>
+                                <option value="Asalariado">Asalariado</option>
+                                <option value="Independiente">Independiente</option>
+                              </select>
+                              <p className={solicitudData["Tipo de ingresos"] ? "text-success w-100 text-center" : "text-danger w-100 text-center"}>{solicitudData["Tipo de ingresos"] ? "Correcto" : "*Debe seleccionar una opcion"}</p>
+                            </div>
+
+
+                            <div className="d-flex flex-column mb-2">
+                              <input
+                                type="text"
+                                name="Tiempo de servicios"
+                                className="border-secondary form-control text-center"
+                                placeholder="Tiempo de servicios"
+                                onChange={handlerEventChange2}
+                              ></input>
+                              <p className={solicitudData["Tiempo de servicios"] ? "text-success w-100 text-center" : "text-danger w-100 text-center"}>{solicitudData["Tiempo de servicios"] && solicitudData["Tiempo de servicios"].length ? "Correcto" : "*Debe rellenar el formulario"}</p>
+                            </div>
+
+                            <div className="d-flex flex-wrap mb-3">
+                              <select onChange={handlerEventChange2} className="text-center rounded-1 p-2 w-100" id="cars" name="Tipo de propiedad">
+                                <option value="">Tipo de propiedad</option>
+                                <option value="Nueva Interés Regular (+180,000)">Nueva Interés Regular (+180,000)</option>
+                                <option value="Vivienda Nueva Interés Preferencial (hasta 180,000)">Vivienda Nueva Interés Preferencial (hasta 180,000)</option>
+                                <option value="Segundo Uso">Segundo Uso</option>
+                              </select><br />
+                              <p className={solicitudData["Tipo de propiedad"] ? "text-success w-100 text-center" : "text-danger w-100 text-center"}>{solicitudData["Tipo de propiedad"] ? "Correcto" : "*Debe seleccionar una opcion"}</p>
+                            </div>
+
+                            <div className="d-flex flex-wrap mb-3">
+                              <select onChange={handlerEventChange2} className="text-center rounded-1 p-2 w-100" id="cars" name="Proposito de compra">
+                                <option value="">Proposito de compra</option>
+                                <option value="Vivienda Principal">Vivienda Principal</option>
+                                <option value="Veraneo/Vacacional">Veraneo/Vacacional</option>
+                                <option value="Inversión">Inversión</option>
+                                <option value="Traslado y Préstamo con Garantía Hipotecaria">Traslado y Préstamo con Garantía Hipotecaria</option>
+                              </select>
+                              <p className={solicitudData["Proposito de compra"] ? "text-success w-100 text-center" : "text-danger w-100 text-center"}>{solicitudData["Proposito de compra"] ? "Correcto" : "*Debe seleccionar una opcion"}</p>
+                            </div>
+
+                            <div className="d-flex flex-wrap mb-3">
+                              <div class="d-flex justify-content-center align-items-center mb-0 w-100">
+                                <span class="w-25 input-group-text m-0 p-2 d-flex justify-content-center" id="inputGroup-sizing-sm">$</span>
+                                <input type="number"
+                                  name="Tasa de interes anual"
+                                  className="w-100 border-secondary form-control  text-center p-2 m-0"
+                                  placeholder="Tasa de interes anual"
+                                  onChange={handlerEventChange2} />
+                              </div><br />
+                              <p className={solicitudData["Tasa de interes anual"] ? "text-success w-100 text-center" : "text-danger w-100 text-center"}>{solicitudData["Tasa de interes anual"] && solicitudData["Tasa de interes anual"].length ? "Correcto" : "*Debe rellenar el formulario"}</p>
+                            </div>
+
+                            <div className="d-flex flex-wrap mb-3">
+                              <div class="d-flex justify-content-center align-items-center mb-0 w-100">
+                                <span class="w-25 input-group-text m-0 p-2 d-flex justify-content-center" id="inputGroup-sizing-sm">$</span>
+                                <input type="number"
+                                  name="Precio de ventas"
+                                  className="w-100 border-secondary form-control  text-center p-2 m-0"
+                                  placeholder="Precio de ventas"
+                                  onChange={handlerEventChange2} />
+                              </div>
+                              <p className={solicitudData["Precio de ventas"] ? "text-success w-100 text-center" : "text-danger w-100 text-center"}>{solicitudData["Precio de ventas"] && solicitudData["Precio de ventas"].length ? "Correcto" : "*Debe rellenar el formulario"}</p>
+                            </div>
+
+                            <div className="d-flex flex-wrap mb-3">
+                              <div class="d-flex justify-content-center align-items-center mb-0 w-100">
+                                <span class="w-25 input-group-text m-0 p-2 d-flex justify-content-center" id="inputGroup-sizing-sm">$</span>
+                                <input type="number"
+                                  name="Abono inicial sugerido"
+                                  className="w-100 border-secondary form-control  text-center p-2 m-0"
+                                  placeholder="Abono inicial sujerido"
+                                  onChange={handlerEventChange2} />
+                              </div>
+                              <p className={solicitudData["Abono inicial sugerido"] ? "text-success w-100 text-center" : "text-danger w-100 text-center"}>{solicitudData["Abono inicial sugerido"] && solicitudData["Abono inicial sugerido"].length ? "Correcto" : "*Debe rellenar el formulario"}</p>
+                            </div>
+
+                            <br />
+                          </div>
+
+
+
+                        }
                         <br />
                         <div class="form-check">
                           <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" name="check" onChange={handlerEventChangeCheck} />
@@ -287,6 +473,38 @@ export function Cotizar() {
                           </label>
                         </div><br />
                         <button onClick={(e) => saveSolicitud(e, "solicitud")} className="btn-Cotizador col-6 btn btn-primary rounded-5 mb-5">Continuar</button>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                       </div>
                     </form>
 

@@ -50,7 +50,7 @@ export function Cotizar() {
 
   const saveSolicitud = (e, letter) => {
     e.preventDefault()
-    const soli = Object.keys(solicitudData)
+    const soli = Object.keys(solicitudData) 
     console.log(soli)
     writeUserData("/solicitudes/", solicitudData.Nombres, solicitudData)
     if (letter === "solicitud") { soli.length == 14 && check === true ? setPreAprobacion(true) : setUserSuccess("Complete") }

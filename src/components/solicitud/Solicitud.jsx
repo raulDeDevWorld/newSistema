@@ -26,7 +26,7 @@ export function Cotizar() {
 
 
   function handlerUploadFile(e) {
-    const fileName = e.target.name
+    const fileName = e.target.name 
     const file = e.target.files[0]
     file !== undefined && setPhotos({ ...photos, [fileName]: file })
     uploadIMG(file, `${solicitudData.Cedula}${fileName}`, setUserSuccess, postsIMG, setUserPostsIMG)

@@ -22,11 +22,16 @@ export function Cotizar() {
   const [cargarDocumentos, setCargarDocumentos] = useState(false)
   const [check, setCheck] = useState(false)
   const [photos, setPhotos] = useState({})
-  const [checkNewSolicitud, setCheckNewSolicitud] = useState(false)
+  const [checkNewSolicitud, setCheckNewSolicitud] = useState('false')
+  const [formSolicitud, setFormSolicitud] = useState('form1')
+
+  const [interesMensual, setInteresMensual] = useState("");
+  const [cotaMensual, setCotaMensual] = useState("");
+
 
 
   function handlerUploadFile(e) {
-    const fileName = e.target.name 
+    const fileName = e.target.name
     const file = e.target.files[0]
     file !== undefined && setPhotos({ ...photos, [fileName]: file })
     uploadIMG(file, `${solicitudData.Cedula}${fileName}`, setUserSuccess, postsIMG, setUserPostsIMG)
@@ -44,24 +49,80 @@ export function Cotizar() {
   const handleCheckSolicitud = (e) => {
     const data = e.target.value
     setCheckNewSolicitud(data)
+    data == 'false' && setFormSolicitud("form1")
   }
-  
+  const handleFormSolicitud = (e) => {
+    const data = e.target.value
+    setFormSolicitud(data)  
+  }
+
   console.log(checkNewSolicitud)
 
   const saveSolicitud = (e, letter) => {
     e.preventDefault()
-    const soli = Object.keys(solicitudData) 
+    const soli = Object.keys(solicitudData)
     console.log(soli)
     writeUserData("/solicitudes/", solicitudData.Nombres, solicitudData)
-    if (letter === "solicitud") { soli.length == 14 && check === true ? setPreAprobacion(true) : setUserSuccess("Complete") }
+    if (letter === "solicitud") { soli.length > 13 && check === true ? setPreAprobacion(true) : setUserSuccess("Complete") }
     if (letter == "preAprobacion") { setDatosComplementarios(true) }
     if (letter == "datosComplementarios") { solicitudData["Direccion Actual"] && solicitudData[check === true && "Numero de Celular REF1"] && solicitudData["Numero de Celular REF2"] && solicitudData["Numero de Celular REF3"] && solicitudData["Nombre Completo REF1"] && solicitudData["Nombre Completo REF2"] && solicitudData["Nombre Completo REF3"] ? setCargarDocumentos(true) : setUserSuccess("Complete") }
-    if (letter == "SaveAll") { soli.length > 14 && solicitudData["Numero de Celular REF1"] && solicitudData["Numero de Celular REF2"] && solicitudData["Numero de Celular REF3"] && solicitudData["Nombre Completo REF1"] && solicitudData["Nombre Completo REF2"] && solicitudData["Nombre Completo REF3"] && check === true && Object.keys(photos).length > 6 ? setUserSuccess("Save") : setUserSuccess("Complete") }
-
+    if (letter == "SaveAll") { soli.length > 16 && solicitudData["Numero de Celular REF1"] && solicitudData["Numero de Celular REF2"] && solicitudData["Numero de Celular REF3"] && solicitudData["Nombre Completo REF1"] && solicitudData["Nombre Completo REF2"] && solicitudData["Nombre Completo REF3"] && check === true && Object.keys(photos).length > 6 ? setUserSuccess("Save") : setUserSuccess("Complete") }
+    calculoDeCotaMensual()
   }
   const handlerEventeChange = e => {
     setSolicitudData({ ...solicitudData, [e.target.name]: e.target.value })
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  const calculoDeCotaMensual = () => {
+    const p = solicitudData["Monto de prestamo"]; // montoDePrestamo
+    const n = solicitudData["Plazo anual"] * 12; // plazoEnMeses
+    const tasaDeinteresAnual00 = solicitudData["Tasa de interes anual"]; //
+    const i = tasaDeinteresAnual00 / 100 / ((360 * 12) / 365);
+    const cotaMes = p / ((1 - Math.pow(1 + i, -n)) / i);
+    console.log(cotaMes);
+
+    setInteresMensual(i);
+    setCotaMensual(cotaMes);
+
+    //  setSaveCotizacion(false);
+  };
+
+
+
+
+
+
+  const remove = (e) => {
+    e.preventDefault();
+    removeData();
+  };
+
+
+
+
+
+
+
+  console.log(checkNewSolicitud)
   return (
     <div className="home">
       {success == "Complete" && <Error>Complete el Formulario correctamente</Error>}
@@ -127,12 +188,20 @@ export function Cotizar() {
                             </div>
                           </form>
                         </div>
+                        <br />
+
+                        {
 
 
+                          checkNewSolicitud == 'true' && <div class="btn-group" role="group" aria-label="Basic example">
+                            <button type="button" class="btn btn-secondary" onClick={handleFormSolicitud} name="inlineRadioOptions" value="form1">Solicitud Nº1</button>
+                            <button type="button" class="btn btn-secondary" onClick={handleFormSolicitud} name="inlineRadioOptions" value="form2">solicitud Nº2</button>
+                          </div>
+
+                        }
 
 
-
-                        <div className="my-flex-solicitud p-5 form-group">
+                        {formSolicitud == 'form1' && <div className="my-flex-solicitud p-5 form-group">
 
                           <br />
                           <label>SOLICITANTE Nº1</label><br />
@@ -144,6 +213,7 @@ export function Cotizar() {
                               name="Nombres"
                               className="border-secondary form-control text-center"
                               placeholder="Nombres"
+                              defaultValue={solicitudData.Nombres}
                               onChange={handlerEventChange}
                             ></input>
                             <p className={solicitudData.Nombres ? "text-success w-100 text-center" : "text-danger w-100 text-center"}>{solicitudData.Nombres && solicitudData.Nombres.length ? "Correcto" : "*Debe rellenar el formulario"}</p>
@@ -155,13 +225,14 @@ export function Cotizar() {
                               name="Apellidos"
                               className="border-secondary form-control text-center"
                               placeholder="Apellidos"
+                              defaultValue={solicitudData.Apellidos && solicitudData.Apellidos}
                               onChange={handlerEventChange}
                             ></input>
                             <p className={solicitudData.Apellidos ? "text-success w-100 text-center" : "text-danger w-100 text-center"}>{solicitudData.Apellidos && solicitudData.Apellidos.length ? "Correcto" : "*Debe rellenar el formulario"}</p>
                           </div>
 
                           <div className="d-flex flex-wrap mb-3">
-                            <select onChange={handlerEventChange} className="border-secondary rounded-1 p-2 text-center w-100" id="cars" name="sexo">
+                            <select onChange={handlerEventChange} className="border-secondary rounded-1 p-2 text-center w-100" id="cars" defaultValue={solicitudData.sexo && solicitudData.sexo} name="sexo">
                               <option value="">Sexo</option>
                               <option value="Masculino">Masculino</option>
                               <option value="Femenino">Femenino</option>
@@ -176,6 +247,7 @@ export function Cotizar() {
                               name="Cedula"
                               className="d-block border-secondary form-control text-center w-100"
                               placeholder="Cedula"
+                              defaultValue={solicitudData.Cedula && solicitudData.Cedula}
                               onChange={handlerEventChange}
                             ></input>
                             <p className={solicitudData.Cedula ? "text-success w-100 text-center" : "text-danger w-100 text-center"}>{solicitudData.Cedula && solicitudData.Cedula.length ? "Correcto" : "*Debe rellenar el formulario"}</p>
@@ -187,13 +259,14 @@ export function Cotizar() {
                               name="Fecha de nacimiento"
                               className="d-block border-secondary form-control text-center w-100"
                               placeholder="Fecha de nacimiento"
+                              defaultValue={solicitudData["Fecha de nacimiento"] && solicitudData["Fecha de nacimiento"]}
                               onChange={handlerEventChange}
                             ></input><br />
                             <p className={solicitudData["Fecha de nacimiento"] ? "text-success w-100 text-center" : "text-danger w-100 text-center"}>{solicitudData["Fecha de nacimiento"] && solicitudData["Fecha de nacimiento"].length ? "Correcto" : "*Debe rellenar el formulario"}</p>
                           </div>
 
                           <div className="d-flex flex-wrap mb-3">
-                            <select onChange={handlerEventChange} className="text-center border-secondary rounded-1 p-2 w-100" id="cars" name="Estado Migratorio">
+                            <select onChange={handlerEventChange} className="text-center border-secondary rounded-1 p-2 w-100" id="cars" defaultValue={solicitudData["Estado Migratorio"] && solicitudData["Estado Migratorio"]} name="Estado Migratorio">
                               <option value="">Estado migratorio</option>
                               <option value="Panameño">Panameño</option>
                               <option value="Extranjero - Residente Permanente">Extranjero - Residente Permanente</option>
@@ -205,7 +278,7 @@ export function Cotizar() {
 
                           <div className="d-flex flex-wrap mb-3">
 
-                            <select onChange={handlerEventChange} className="text-center border-secondary rounded-1 p-2 w-100" id="cars" name="Estado Civil">
+                            <select onChange={handlerEventChange} className="text-center border-secondary rounded-1 p-2 w-100" id="cars" defaultValue={solicitudData["Estado Civil"] && solicitudData["Estado Civil"]} name="Estado Civil">
                               <option value="">Estado civil</option>
                               <option value="Soltero">Soltero</option>
                               <option value="Casado">Casado</option>
@@ -216,7 +289,7 @@ export function Cotizar() {
 
                           <div className="d-flex flex-wrap mb-3">
 
-                            <select onChange={handlerEventChange} className="text-center border-secondary rounded-1 p-2 w-100" id="cars" name="Tipo de ingresos">
+                            <select onChange={handlerEventChange} className="text-center border-secondary rounded-1 p-2 w-100" id="cars" defaultValue={solicitudData["Tipo de ingresos"] && solicitudData["Tipo de ingresos"]} name="Tipo de ingresos">
                               <option value="">Tipo de ingresos</option>
                               <option value="Asalariado">Asalariado</option>
                               <option value="Independiente">Independiente</option>
@@ -231,13 +304,14 @@ export function Cotizar() {
                               name="Tiempo de servicios"
                               className="border-secondary form-control text-center"
                               placeholder="Tiempo de servicios"
+                              defaultValue={solicitudData["Tiempo de servicios"] && solicitudData["Tiempo de servicios"]}
                               onChange={handlerEventChange}
                             ></input>
                             <p className={solicitudData["Tiempo de servicios"] ? "text-success w-100 text-center" : "text-danger w-100 text-center"}>{solicitudData["Tiempo de servicios"] && solicitudData["Tiempo de servicios"].length ? "Correcto" : "*Debe rellenar el formulario"}</p>
                           </div>
 
                           <div className="d-flex flex-wrap mb-3">
-                            <select onChange={handlerEventChange} className="text-center rounded-1 p-2 w-100" id="cars" name="Tipo de propiedad">
+                            <select onChange={handlerEventChange} className="text-center rounded-1 p-2 w-100" id="cars" defaultValue={solicitudData["Tipo de propiedad"] && solicitudData["Tipo de propiedad"]} name="Tipo de propiedad">
                               <option value="">Tipo de propiedad</option>
                               <option value="Nueva Interés Regular (+180,000)">Nueva Interés Regular (+180,000)</option>
                               <option value="Vivienda Nueva Interés Preferencial (hasta 180,000)">Vivienda Nueva Interés Preferencial (hasta 180,000)</option>
@@ -247,7 +321,7 @@ export function Cotizar() {
                           </div>
 
                           <div className="d-flex flex-wrap mb-3">
-                            <select onChange={handlerEventChange} className="text-center rounded-1 p-2 w-100" id="cars" name="Proposito de compra">
+                            <select onChange={handlerEventChange} className="text-center rounded-1 p-2 w-100" id="cars" defaultValue={solicitudData["Proposito de compra"] && solicitudData["Proposito de compra"]} name="Proposito de compra">
                               <option value="">Proposito de compra</option>
                               <option value="Vivienda Principal">Vivienda Principal</option>
                               <option value="Veraneo/Vacacional">Veraneo/Vacacional</option>
@@ -264,6 +338,7 @@ export function Cotizar() {
                                 name="Tasa de interes anual"
                                 className="w-100 border-secondary form-control  text-center p-2 m-0"
                                 placeholder="Tasa de interes anual"
+                                defaultValue={solicitudData["Tasa de interes anual"] && solicitudData["Tasa de interes anual"]}
                                 onChange={handlerEventChange} />
                             </div><br />
                             <p className={solicitudData["Tasa de interes anual"] ? "text-success w-100 text-center" : "text-danger w-100 text-center"}>{solicitudData["Tasa de interes anual"] && solicitudData["Tasa de interes anual"].length ? "Correcto" : "*Debe rellenar el formulario"}</p>
@@ -276,6 +351,7 @@ export function Cotizar() {
                                 name="Precio de ventas"
                                 className="w-100 border-secondary form-control  text-center p-2 m-0"
                                 placeholder="Precio de ventas"
+                                defaultValue={solicitudData["Precio de ventas"] && solicitudData["Precio de ventas"]}
                                 onChange={handlerEventChange} />
                             </div>
                             <p className={solicitudData["Precio de ventas"] ? "text-success w-100 text-center" : "text-danger w-100 text-center"}>{solicitudData["Precio de ventas"] && solicitudData["Precio de ventas"].length ? "Correcto" : "*Debe rellenar el formulario"}</p>
@@ -288,17 +364,72 @@ export function Cotizar() {
                                 name="Abono inicial sugerido"
                                 className="w-100 border-secondary form-control  text-center p-2 m-0"
                                 placeholder="Abono inicial sujerido"
+                                defaultValue={solicitudData["Abono inicial sugerido"] && solicitudData["Abono inicial sugerido"]}
                                 onChange={handlerEventChange} />
                             </div>
                             <p className={solicitudData["Abono inicial sugerido"] ? "text-success w-100 text-center" : "text-danger w-100 text-center"}>{solicitudData["Abono inicial sugerido"] && solicitudData["Abono inicial sugerido"].length ? "Correcto" : "*Debe rellenar el formulario"}</p>
                           </div>
 
+                          <div className="d-flex flex-wrap mb-3">
+                            <div class="d-flex justify-content-center align-items-center mb-0 w-100">
+                              <span class="w-25 input-group-text m-0 p-2 d-flex justify-content-center" id="inputGroup-sizing-sm">$</span>
+                              <input type="number"
+                                name="Monto de prestamo"
+                                className="w-100 border-secondary form-control  text-center p-2 m-0"
+                                placeholder="Monto de prestamo"
+                                defaultValue={solicitudData["Monto de prestamo"] && solicitudData["Monto de prestamo"]}
+                                onChange={handlerEventChange} />
+                            </div>
+                            <p className={solicitudData["Monto de prestamo"] ? "text-success w-100 text-center" : "text-danger w-100 text-center"}>{solicitudData["Monto de prestamo"] && solicitudData["Monto de prestamo"].length ? "Correcto" : "*Debe rellenar el formulario"}</p>
+                          </div>
+
+                          <div className="d-flex flex-wrap mb-3">
+                            <div class="d-flex justify-content-center align-items-center mb-0 w-100">
+                              <span class="w-25 input-group-text m-0 p-2 d-flex justify-content-center" id="inputGroup-sizing-sm">$</span>
+                              <input type="number"
+                                name="Plazo anual"
+                                className="w-100 border-secondary form-control  text-center p-2 m-0"
+                                placeholder="Plazo anual"
+                                defaultValue={solicitudData["Plazo anual"] && solicitudData["Plazo anual"]}
+                                onChange={handlerEventChange} />
+                            </div>
+                            <p className={solicitudData["Plazo anual"] ? "text-success w-100 text-center" : "text-danger w-100 text-center"}>{solicitudData["Plazo anual"] && solicitudData["Plazo anual"].length ? "Correcto" : "*Debe rellenar el formulario"}</p>
+                          </div>
+
+
+
+
+                          <div className="d-flex flex-wrap mb-3">
+                              <div class="d-flex justify-content-center align-items-center mb-0 w-100">
+                                <span class="w-25 input-group-text m-0 p-2 d-flex justify-content-center" id="inputGroup-sizing-sm">$</span>
+                                <input type="number"
+                                  name="Salario"
+                                  className="w-100 border-secondary form-control  text-center p-2 m-0"
+                                  placeholder="Salario"
+                                  defaultValue={solicitudData["Salario"] && solicitudData["Salario"]}
+                                  onChange={handlerEventChange} />
+                              </div>
+                              <p className={solicitudData["Salario"] ? "text-success w-100 text-center" : "text-danger w-100 text-center"}>{solicitudData["Salario"] && solicitudData["Salario"].length ? "Correcto" : "*Debe rellenar el formulario"}</p>
+                            </div>
+
+
+
+
+
                           <br />
                         </div>
+
+
+
+                        }
+
+
+
+
                         {
 
 
-                          checkNewSolicitud == 'true' && <div className="my-flex-solicitud p-5 form-group">
+                          checkNewSolicitud == 'true' && formSolicitud == 'form2' && <div className="my-flex-solicitud p-5 form-group">
 
                             <br />
                             <label>SOLICITANTE Nº2</label><br />
@@ -310,9 +441,10 @@ export function Cotizar() {
                                 name="Nombres"
                                 className="border-secondary form-control text-center"
                                 placeholder="Nombres"
+                                defaultValue={solicitudData2.Nombres && solicitudData2.Nombres}
                                 onChange={handlerEventChange2}
                               ></input>
-                              <p className={solicitudData.Nombres ? "text-success w-100 text-center" : "text-danger w-100 text-center"}>{solicitudData.Nombres && solicitudData.Nombres.length ? "Correcto" : "*Debe rellenar el formulario"}</p>
+                              <p className={solicitudData2.Nombres ? "text-success w-100 text-center" : "text-danger w-100 text-center"}>{solicitudData2.Nombres && solicitudData2.Nombres.length ? "Correcto" : "*Debe rellenar el formulario"}</p>
                             </div>
 
                             <div className="d-flex flex-column mb-3">
@@ -321,19 +453,20 @@ export function Cotizar() {
                                 name="Apellidos"
                                 className="border-secondary form-control text-center"
                                 placeholder="Apellidos"
+                                defaultValue={solicitudData2.Apellidos && solicitudData2.Apellidos}
                                 onChange={handlerEventChange2}
                               ></input>
-                              <p className={solicitudData.Apellidos ? "text-success w-100 text-center" : "text-danger w-100 text-center"}>{solicitudData.Apellidos && solicitudData.Apellidos.length ? "Correcto" : "*Debe rellenar el formulario"}</p>
+                              <p className={solicitudData2.Apellidos ? "text-success w-100 text-center" : "text-danger w-100 text-center"}>{solicitudData2.Apellidos && solicitudData2.Apellidos.length ? "Correcto" : "*Debe rellenar el formulario"}</p>
                             </div>
 
                             <div className="d-flex flex-wrap mb-3">
-                              <select onChange={handlerEventChange2} className="border-secondary rounded-1 p-2 text-center w-100" id="cars" name="sexo">
+                              <select onChange={handlerEventChange2} className="border-secondary rounded-1 p-2 text-center w-100" id="cars" defaultValue={solicitudData2.sexo && solicitudData2.sexo} name="sexo">
                                 <option value="">Sexo</option>
                                 <option value="Masculino">Masculino</option>
                                 <option value="Femenino">Femenino</option>
                                 <option value="Indefinido">Indefinido</option>
                               </select>
-                              <p className={solicitudData.sexo ? "text-success w-100 text-center" : "text-danger w-100 text-center"}>{solicitudData.sexo ? "Correcto" : "*Debe seleccionar una opcion"}</p>
+                              <p className={solicitudData2.sexo ? "text-success w-100 text-center" : "text-danger w-100 text-center"}>{solicitudData2.sexo ? "Correcto" : "*Debe seleccionar una opcion"}</p>
                             </div>
 
                             <div className="d-flex flex-wrap mb-3">
@@ -342,9 +475,10 @@ export function Cotizar() {
                                 name="Cedula"
                                 className="d-block border-secondary form-control text-center w-100"
                                 placeholder="Cedula"
+                                defaultValue={solicitudData2.Cedula && solicitudData2.Cedula}
                                 onChange={handlerEventChange2}
                               ></input>
-                              <p className={solicitudData.Cedula ? "text-success w-100 text-center" : "text-danger w-100 text-center"}>{solicitudData.Cedula && solicitudData.Cedula.length ? "Correcto" : "*Debe rellenar el formulario"}</p>
+                              <p className={solicitudData2.Cedula ? "text-success w-100 text-center" : "text-danger w-100 text-center"}>{solicitudData2.Cedula && solicitudData2.Cedula.length ? "Correcto" : "*Debe rellenar el formulario"}</p>
                             </div>
 
                             <div className="d-flex flex-wrap mb-3">
@@ -353,41 +487,42 @@ export function Cotizar() {
                                 name="Fecha de nacimiento"
                                 className="d-block border-secondary form-control text-center w-100"
                                 placeholder="Fecha de nacimiento"
+                                defaultValue={solicitudData2["Fecha de nacimiento"] && solicitudData2["Fecha de nacimiento"]}
                                 onChange={handlerEventChange2}
                               ></input><br />
-                              <p className={solicitudData["Fecha de nacimiento"] ? "text-success w-100 text-center" : "text-danger w-100 text-center"}>{solicitudData["Fecha de nacimiento"] && solicitudData["Fecha de nacimiento"].length ? "Correcto" : "*Debe rellenar el formulario"}</p>
+                              <p className={solicitudData2["Fecha de nacimiento"] ? "text-success w-100 text-center" : "text-danger w-100 text-center"}>{solicitudData2["Fecha de nacimiento"] && solicitudData2["Fecha de nacimiento"].length ? "Correcto" : "*Debe rellenar el formulario"}</p>
                             </div>
 
                             <div className="d-flex flex-wrap mb-3">
-                              <select onChange={handlerEventChange2} className="text-center border-secondary rounded-1 p-2 w-100" id="cars" name="Estado Migratorio">
+                              <select onChange={handlerEventChange2} className="text-center border-secondary rounded-1 p-2 w-100" id="cars" defaultValue={solicitudData2["Estado Migratorio"]&& solicitudData2["Estado Migratorio"]} name="Estado Migratorio">
                                 <option value="">Estado migratorio</option>
                                 <option value="Panameño">Panameño</option>
                                 <option value="Extranjero - Residente Permanente">Extranjero - Residente Permanente</option>
                                 <option value="Extranjero - Residente Temporal">Extranjero - Residente Temporal</option>
                                 <option value="Extranjero - No Residente">Extranjero - No Residente</option>
                               </select><br />
-                              <p className={solicitudData["Estado Migratorio"] ? "text-success w-100 text-center" : "text-danger w-100 text-center"}>{solicitudData["Estado Migratorio"] ? "Correcto" : "*Debe seleccionar una opcion"}</p>
+                              <p className={solicitudData2["Estado Migratorio"] ? "text-success w-100 text-center" : "text-danger w-100 text-center"}>{solicitudData2["Estado Migratorio"] ? "Correcto" : "*Debe seleccionar una opcion"}</p>
                             </div>
 
                             <div className="d-flex flex-wrap mb-3">
 
-                              <select onChange={handlerEventChange2} className="text-center border-secondary rounded-1 p-2 w-100" id="cars" name="Estado Civil">
+                              <select onChange={handlerEventChange2} className="text-center border-secondary rounded-1 p-2 w-100" id="cars" defaultValue={solicitudData2["Estado Civil"] && solicitudData2["Estado Civil"]} name="Estado Civil">
                                 <option value="">Estado civil</option>
                                 <option value="Soltero">Soltero</option>
                                 <option value="Casado">Casado</option>
                                 <option value="Unión Libre">Unión Libre</option>
                               </select><br />
-                              <p className={solicitudData["Estado Civil"] ? "text-success w-100 text-center" : "text-danger w-100 text-center"}>{solicitudData["Estado Civil"] ? "Correcto" : "*Debe seleccionar una opcion"}</p>
+                              <p className={solicitudData2["Estado Civil"] ? "text-success w-100 text-center" : "text-danger w-100 text-center"}>{solicitudData2["Estado Civil"] ? "Correcto" : "*Debe seleccionar una opcion"}</p>
                             </div>
 
                             <div className="d-flex flex-wrap mb-3">
 
-                              <select onChange={handlerEventChange2} className="text-center border-secondary rounded-1 p-2 w-100" id="cars" name="Tipo de ingresos">
+                              <select onChange={handlerEventChange2} className="text-center border-secondary rounded-1 p-2 w-100" id="cars" defaultValue={solicitudData2["Tipo de ingresos"] && solicitudData2["Tipo de ingresos"]} name="Tipo de ingresos">
                                 <option value="">Tipo de ingresos</option>
                                 <option value="Asalariado">Asalariado</option>
                                 <option value="Independiente">Independiente</option>
                               </select>
-                              <p className={solicitudData["Tipo de ingresos"] ? "text-success w-100 text-center" : "text-danger w-100 text-center"}>{solicitudData["Tipo de ingresos"] ? "Correcto" : "*Debe seleccionar una opcion"}</p>
+                              <p className={solicitudData2["Tipo de ingresos"] ? "text-success w-100 text-center" : "text-danger w-100 text-center"}>{solicitudData2["Tipo de ingresos"] ? "Correcto" : "*Debe seleccionar una opcion"}</p>
                             </div>
 
 
@@ -397,30 +532,31 @@ export function Cotizar() {
                                 name="Tiempo de servicios"
                                 className="border-secondary form-control text-center"
                                 placeholder="Tiempo de servicios"
+                                defaultValue={solicitudData2["Tiempo de servicios"] && solicitudData2["Tiempo de servicios"]}
                                 onChange={handlerEventChange2}
                               ></input>
-                              <p className={solicitudData["Tiempo de servicios"] ? "text-success w-100 text-center" : "text-danger w-100 text-center"}>{solicitudData["Tiempo de servicios"] && solicitudData["Tiempo de servicios"].length ? "Correcto" : "*Debe rellenar el formulario"}</p>
+                              <p className={solicitudData2["Tiempo de servicios"] ? "text-success w-100 text-center" : "text-danger w-100 text-center"}>{solicitudData2["Tiempo de servicios"] && solicitudData2["Tiempo de servicios"].length ? "Correcto" : "*Debe rellenar el formulario"}</p>
                             </div>
 
                             <div className="d-flex flex-wrap mb-3">
-                              <select onChange={handlerEventChange2} className="text-center rounded-1 p-2 w-100" id="cars" name="Tipo de propiedad">
+                              <select onChange={handlerEventChange2} className="text-center rounded-1 p-2 w-100" id="cars" defaultValue={solicitudData2["Tipo de propiedad"] && solicitudData2["Tipo de propiedad"]} name="Tipo de propiedad">
                                 <option value="">Tipo de propiedad</option>
                                 <option value="Nueva Interés Regular (+180,000)">Nueva Interés Regular (+180,000)</option>
                                 <option value="Vivienda Nueva Interés Preferencial (hasta 180,000)">Vivienda Nueva Interés Preferencial (hasta 180,000)</option>
                                 <option value="Segundo Uso">Segundo Uso</option>
                               </select><br />
-                              <p className={solicitudData["Tipo de propiedad"] ? "text-success w-100 text-center" : "text-danger w-100 text-center"}>{solicitudData["Tipo de propiedad"] ? "Correcto" : "*Debe seleccionar una opcion"}</p>
+                              <p className={solicitudData2["Tipo de propiedad"] ? "text-success w-100 text-center" : "text-danger w-100 text-center"}>{solicitudData2["Tipo de propiedad"] ? "Correcto" : "*Debe seleccionar una opcion"}</p>
                             </div>
 
                             <div className="d-flex flex-wrap mb-3">
-                              <select onChange={handlerEventChange2} className="text-center rounded-1 p-2 w-100" id="cars" name="Proposito de compra">
+                              <select onChange={handlerEventChange2} className="text-center rounded-1 p-2 w-100" id="cars" defaultValue={solicitudData2["Proposito de compra"] && solicitudData2["Proposito de compra"]} name="Proposito de compra">
                                 <option value="">Proposito de compra</option>
                                 <option value="Vivienda Principal">Vivienda Principal</option>
                                 <option value="Veraneo/Vacacional">Veraneo/Vacacional</option>
                                 <option value="Inversión">Inversión</option>
                                 <option value="Traslado y Préstamo con Garantía Hipotecaria">Traslado y Préstamo con Garantía Hipotecaria</option>
                               </select>
-                              <p className={solicitudData["Proposito de compra"] ? "text-success w-100 text-center" : "text-danger w-100 text-center"}>{solicitudData["Proposito de compra"] ? "Correcto" : "*Debe seleccionar una opcion"}</p>
+                              <p className={solicitudData2["Proposito de compra"] ? "text-success w-100 text-center" : "text-danger w-100 text-center"}>{solicitudData2["Proposito de compra"] ? "Correcto" : "*Debe seleccionar una opcion"}</p>
                             </div>
 
                             <div className="d-flex flex-wrap mb-3">
@@ -430,9 +566,10 @@ export function Cotizar() {
                                   name="Tasa de interes anual"
                                   className="w-100 border-secondary form-control  text-center p-2 m-0"
                                   placeholder="Tasa de interes anual"
+                                  defaultValue={solicitudData2["Tasa de interes anual"] && solicitudData2["Tasa de interes anual"]}
                                   onChange={handlerEventChange2} />
                               </div><br />
-                              <p className={solicitudData["Tasa de interes anual"] ? "text-success w-100 text-center" : "text-danger w-100 text-center"}>{solicitudData["Tasa de interes anual"] && solicitudData["Tasa de interes anual"].length ? "Correcto" : "*Debe rellenar el formulario"}</p>
+                              <p className={solicitudData2["Tasa de interes anual"] ? "text-success w-100 text-center" : "text-danger w-100 text-center"}>{solicitudData2["Tasa de interes anual"] && solicitudData2["Tasa de interes anual"].length ? "Correcto" : "*Debe rellenar el formulario"}</p>
                             </div>
 
                             <div className="d-flex flex-wrap mb-3">
@@ -442,9 +579,10 @@ export function Cotizar() {
                                   name="Precio de ventas"
                                   className="w-100 border-secondary form-control  text-center p-2 m-0"
                                   placeholder="Precio de ventas"
+                                  defaultValue={solicitudData2["Precio de ventas"] && solicitudData2["Precio de ventas"]}
                                   onChange={handlerEventChange2} />
                               </div>
-                              <p className={solicitudData["Precio de ventas"] ? "text-success w-100 text-center" : "text-danger w-100 text-center"}>{solicitudData["Precio de ventas"] && solicitudData["Precio de ventas"].length ? "Correcto" : "*Debe rellenar el formulario"}</p>
+                              <p className={solicitudData2["Precio de ventas"] ? "text-success w-100 text-center" : "text-danger w-100 text-center"}>{solicitudData2["Precio de ventas"] && solicitudData2["Precio de ventas"].length ? "Correcto" : "*Debe rellenar el formulario"}</p>
                             </div>
 
                             <div className="d-flex flex-wrap mb-3">
@@ -454,11 +592,59 @@ export function Cotizar() {
                                   name="Abono inicial sugerido"
                                   className="w-100 border-secondary form-control  text-center p-2 m-0"
                                   placeholder="Abono inicial sujerido"
+                                  defaultValue={solicitudData2["Abono inicial sugerido"] && solicitudData2["Abono inicial sugerido"]}
                                   onChange={handlerEventChange2} />
                               </div>
-                              <p className={solicitudData["Abono inicial sugerido"] ? "text-success w-100 text-center" : "text-danger w-100 text-center"}>{solicitudData["Abono inicial sugerido"] && solicitudData["Abono inicial sugerido"].length ? "Correcto" : "*Debe rellenar el formulario"}</p>
+                              <p className={solicitudData2["Abono inicial sugerido"] ? "text-success w-100 text-center" : "text-danger w-100 text-center"}>{solicitudData2["Abono inicial sugerido"] && solicitudData2["Abono inicial sugerido"].length ? "Correcto" : "*Debe rellenar el formulario"}</p>
                             </div>
 
+
+
+                            <div className="d-flex flex-wrap mb-3">
+                            <div class="d-flex justify-content-center align-items-center mb-0 w-100">
+                              <span class="w-25 input-group-text m-0 p-2 d-flex justify-content-center" id="inputGroup-sizing-sm">$</span>
+                              <input type="number"
+                                name="Monto de prestamo"
+                                className="w-100 border-secondary form-control  text-center p-2 m-0"
+                                placeholder="Monto de prestamo"
+                                defaultValue={solicitudData2["Monto de prestamo"] && solicitudData2["Monto de prestamo"]}
+                                onChange={handlerEventChange2} />
+                            </div>
+                            <p className={solicitudData2["Monto de prestamo"] ? "text-success w-100 text-center" : "text-danger w-100 text-center"}>{solicitudData2["Monto de prestamo"] && solicitudData2["Monto de prestamo"].length ? "Correcto" : "*Debe rellenar el formulario"}</p>
+                          </div>
+
+                          <div className="d-flex flex-wrap mb-3">
+                            <div class="d-flex justify-content-center align-items-center mb-0 w-100">
+                              <span class="w-25 input-group-text m-0 p-2 d-flex justify-content-center" id="inputGroup-sizing-sm">$</span>
+                              <input type="number"
+                                name="Plazo anual"
+                                className="w-100 border-secondary form-control  text-center p-2 m-0"
+                                placeholder="Plazo anual"
+                                defaultValue={solicitudData2["Plazo anual"] && solicitudData2["Plazo anual"]}
+                                onChange={handlerEventChange2} />
+                            </div>
+                            <p className={solicitudData2["Plazo anual"] ? "text-success w-100 text-center" : "text-danger w-100 text-center"}>{solicitudData2["Plazo anual"] && solicitudData2["Plazo anual"].length ? "Correcto" : "*Debe rellenar el formulario"}</p>
+                          </div>
+
+
+
+
+                            <div className="d-flex flex-wrap mb-3">
+                              <div class="d-flex justify-content-center align-items-center mb-0 w-100">
+                                <span class="w-25 input-group-text m-0 p-2 d-flex justify-content-center" id="inputGroup-sizing-sm">$</span>
+                                <input type="number"
+                                  name="Salario"
+                                  className="w-100 border-secondary form-control  text-center p-2 m-0"
+                                  placeholder="Salario"
+                                  defaultValue={solicitudData2["Salario"] && solicitudData2["Salario"]}
+                                  onChange={handlerEventChange2} />
+                              </div>
+                              <p className={solicitudData2["Salario"] ? "text-success w-100 text-center" : "text-danger w-100 text-center"}>{solicitudData2["Salario"] && solicitudData2["Salario"].length ? "Correcto" : "*Debe rellenar el formulario"}</p>
+                            </div>
+
+
+
+                            
                             <br />
                           </div>
 
@@ -508,7 +694,22 @@ export function Cotizar() {
                       </div>
                     </form>
 
-                    {preAprobacion == "no sirve" &&
+                    {/* preAprobacion == "no sirve" &&
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                       <div className={"container card card-body shadow"}>
                         <div className="row">
                           <div className="col-4 text-center">
@@ -530,11 +731,75 @@ export function Cotizar() {
                             <span>Abono inicial sugerido </span> <br /><span>{solicitudData["Abono inicial sugerido"]} </span>
                           </div>
                         </div>
-                      </div>}
+                      </div>*/}
 
                     {preAprobacion == true && <div className={"container card card-body shadow p-5"}>
                       <h3>Pre-Aprobacion</h3>
                       <p>Genial, estas pre-aprobado finaliza tu solicitud </p>
+
+
+
+
+
+
+
+                     
+                      <div className="Col2">
+                        <h3 className="text-center">¡Todo listo!</h3>
+                        <h4 className="text-center">
+                          Estos son los resultados de tu cotización{" "}
+                        </h4>
+                        <span>Meses de financiamiento: </span> <br />
+                        <span>{solicitudData["Plazo anual"] * 12 }</span>
+                        <hr />
+                        <span>Tasa de interes mensual: </span> <br />
+                        <span>
+                          {Math.round(interesMensual * 100000) / 100000}{" "}
+                        </span>
+                        <hr />
+                        <span>Pago mensual: </span> <br />
+                        <span>
+                          {Math.round(cotaMensual * 100) / 100}{" "}
+                        </span>
+                        <hr />
+                        <span>Abono inicial Sugerido: </span> <br />
+                        <span>{ checkNewSolicitud == "true" && solicitudData2["Abono inicial sugerido"] ? parseInt(solicitudData["Abono inicial sugerido"]) + parseInt(solicitudData2["Abono inicial sugerido"])  : solicitudData["Abono inicial sugerido"] }</span>
+                        <hr />
+                        <form
+                          action=""
+                          className="w-100 h5 btn-Cotizador text-light p-3 round-3"
+                        >
+                          <p className="text-center">
+                            ¿Deseas solicitar una pre-aprobación de tu
+                            hipoteca?
+                          </p>
+                          <div className="text-center">
+                            <button
+                              className="btn-Cotizador col-5 btn btn-primary rounded-5 mb-2"
+                              //onClick={Guardar}
+                            >
+                              Guardar Cotizacion
+                            </button>
+                            <button
+                              className="btn-Cotizador col-5 btn btn-primary rounded-5 mb-2"
+                            onClick={remove}
+                            >
+                              Quiero Aplicar
+                            </button>
+                          </div>
+                        </form>
+                      </div>
+
+
+
+
+
+
+
+
+
+
+
 
                       <p>Letra</p>
                       <p>Plazo</p>
@@ -548,6 +813,22 @@ export function Cotizar() {
 
                       </form>
                     </div>}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

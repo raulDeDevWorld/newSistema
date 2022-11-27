@@ -4,7 +4,7 @@ import Sidebar from "../sidebar/Sidebar";
 import Navbar from "../navbar/Navbar";
 import { writeUserData, removeData } from "../../firebase";
 import { useAuth } from "../../context/AuthContext.js";
-//import CotizarImg from "../../assets/cotizarimg.png";
+import CotizarImg from "../../assets/cotizarimg.png";
 
 export function Cotizar() {
   const [allData, setAllData] = useState({});
@@ -131,8 +131,8 @@ export function Cotizar() {
                             id="cars"
                             name="cars"
                           >
-                            <option value="Seleccione su tipo de propiedad">
-                              Seleccione su tipo de propiedad
+                            <option value="Seleccione su tipo de propiedad" className="text-center">
+                              Tipo de propiedad:
                             </option>
                             <option value="Nueva Interés Regular (+180,000)">
                               Nueva Interés Regular (+180,000)
@@ -149,8 +149,8 @@ export function Cotizar() {
                             id="cars"
                             name="cars"
                           >
-                            <option value="Seleccione su Proposito de compra">
-                              Seleccione su Proposito de compra
+                            <option value="Seleccione su Proposito de compra"className="text-center">
+                              Proposito de compra:
                             </option>
                             <option value="Vivienda Principal">
                               Vivienda Principal
@@ -169,8 +169,8 @@ export function Cotizar() {
                             id="cars"
                             name="cars"
                           >
-                            <option value="Seleccione su Estado Migratorio">
-                              Seleccione su Estado Migratorio
+                            <option value="Seleccione su Estado Migratorio"className="text-center">
+                              Estado Migratorio:
                             </option>
                             <option value="Panameño">Panameño</option>
                             <option value="Extranjero - Residente Permanente">
@@ -189,18 +189,24 @@ export function Cotizar() {
                             id="cars"
                             name="cars"
                           >
-                            <option value="Seleccione su Estado Migratorio">
-                              Seleccione su Estado Migratorio
+                            <option value="Seleccione su Estado Migratorio"className="text-center">
+                            Tipo de Ingreso:
                             </option>
-                            <option value="Panameño">Panameño</option>
+                            <option value="Panameño">Asalariado Sector Privada</option>
                             <option value="Extranjero - Residente Permanente">
-                              Extranjero - Residente Permanente
+                            Asalariado Sector Público
                             </option>
                             <option value="Extranjero - Residente Temporal">
-                              Extranjero - Residente Temporal
+                            Independiente
                             </option>
                             <option value="Extranjero - No Residente">
-                              Extranjero - No Residente
+                            Profesional Idoneo
+                            </option>
+                            <option value="Extranjero - No Residente">
+                            Jubilado
+                            </option>
+                            <option value="Extranjero - No Residente">
+                            Pensionado
                             </option>
                           </select>
 
@@ -337,7 +343,7 @@ export function Cotizar() {
                             <div className="rowclass">
                               <div className="Col1">
                                 <img
-                                  src="/User.svg"
+                                  src={CotizarImg}
                                   className="cotizarimg"
                                 ></img>
                               </div>

@@ -31,11 +31,11 @@ const auth = getAuth()
 const providerGoogle = new GoogleAuthProvider();
 
 
-function onAuth(setUser, setUserData) {
+function onAuth(setUser, setUserData, postsIMG, setUserPostsIMG) {
   return onAuthStateChanged(auth, (user) => {
         if (user) {
               setUser(user)
-              getData(setUserData)
+              getData(setUserData, postsIMG, setUserPostsIMG)
         }else{
           setUser(null)
         }
@@ -115,6 +115,12 @@ function removeData () {
   .catch(()=>console.log('repeat'));
 
 }
+function removeDataPros () {
+  remove(ref(db, '/prospectos/'))
+  .then(()=>console.log('save'))
+  .catch(()=>console.log('repeat'));
+
+}
 
 
 function getData(setUserData) {
@@ -135,4 +141,4 @@ async function removeDataItem (url, data, setUserData) {
 }
 
 
-export {app, onAuth, login, signup, logout, loginWithGoogle, resetPassword, writeUserData, removeData, removeDataItem  }
+export {app, onAuth, login, signup, logout, loginWithGoogle, resetPassword, writeUserData, removeData, removeDataPros, removeDataItem  }

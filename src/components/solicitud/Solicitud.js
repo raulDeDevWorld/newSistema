@@ -35,6 +35,7 @@ export function Cotizar() {
   const [cotaMensual, setCotaMensual] = useState("");
 
   function handlerUploadFile(e) {
+    console.log(e)
     const fileName = e.target.name;
     const file = e.target.files[0];
     file !== undefined && setPhotos({ ...photos, [fileName]: file });
@@ -46,7 +47,7 @@ export function Cotizar() {
       setUserPostsIMG
     );
   }
-  console.log(photos);
+  console.log(postsIMG);
   const handlerEventChange = (e) => {
     SetgetPorcentajeFijo({
       ...getPorcentajeFijo,
@@ -79,8 +80,7 @@ export function Cotizar() {
   const saveSolicitud = (e, letter) => {
     e.preventDefault();
     const soli = Object.keys(solicitudData);
-    console.log(soli);
-    writeUserData("/solicitudes/", solicitudData.Nombres, solicitudData);
+
     if (letter === "solicitud") {
       soli.length > 14 && check === true
         ? setPreAprobacion(true)
@@ -91,27 +91,39 @@ export function Cotizar() {
     }
     if (letter == "datosComplementarios") {
       solicitudData["Direccion Actual"] &&
-      solicitudData[check === true && "Numero de Celular REF1"] &&
-      solicitudData["Numero de Celular REF2"] &&
-      solicitudData["Numero de Celular REF3"] &&
-      solicitudData["Nombre Completo REF1"] &&
-      solicitudData["Nombre Completo REF2"] &&
-      solicitudData["Nombre Completo REF3"]
+        solicitudData[check === true && "Numero de Celular REF1"] &&
+        solicitudData["Numero de Celular REF2"] &&
+        solicitudData["Numero de Celular REF3"] &&
+        solicitudData["Nombre Completo REF1"] &&
+        solicitudData["Nombre Completo REF2"] &&
+        solicitudData["Nombre Completo REF3"]
         ? setCargarDocumentos(true)
         : setUserSuccess("Complete");
     }
     if (letter == "SaveAll") {
       soli.length > 16 &&
-      solicitudData["Numero de Celular REF1"] &&
-      solicitudData["Numero de Celular REF2"] &&
-      solicitudData["Numero de Celular REF3"] &&
-      solicitudData["Nombre Completo REF1"] &&
-      solicitudData["Nombre Completo REF2"] &&
-      solicitudData["Nombre Completo REF3"] &&
-      check === true &&
-      Object.keys(photos).length > 6
+        solicitudData["Numero de Celular REF1"] &&
+        solicitudData["Numero de Celular REF2"] &&
+        solicitudData["Numero de Celular REF3"] &&
+        solicitudData["Nombre Completo REF1"] &&
+        solicitudData["Nombre Completo REF2"] &&
+        solicitudData["Nombre Completo REF3"] &&
+        check === true &&
+        Object.keys(photos).length > 6
         ? setSolicitudEnviada(true)
         : setUserSuccess("Complete");
+
+      if (soli.length > 16 &&
+        solicitudData["Numero de Celular REF1"] &&
+        solicitudData["Numero de Celular REF2"] &&
+        solicitudData["Numero de Celular REF3"] &&
+        solicitudData["Nombre Completo REF1"] &&
+        solicitudData["Nombre Completo REF2"] &&
+        solicitudData["Nombre Completo REF3"] &&
+        check === true) {
+        writeUserData("/solicitudes/", solicitudData.Cedula, solicitudData);
+      }
+
     }
     calculoDeCotaMensual();
   };
@@ -137,7 +149,10 @@ export function Cotizar() {
     e.preventDefault();
     removeData();
   };
-
+  const redirect = (rute) => {
+    console.log('redirect')
+    window.open(rute, '_blank')
+  };
   console.log(checkNewSolicitud);
   return (
     <div className="home">
@@ -260,7 +275,7 @@ export function Cotizar() {
                                 }
                               >
                                 {solicitudData.Nombres &&
-                                solicitudData.Nombres.length
+                                  solicitudData.Nombres.length
                                   ? "✔"
                                   : "*"}
                               </p>
@@ -286,7 +301,7 @@ export function Cotizar() {
                                 }
                               >
                                 {solicitudData.Apellidos &&
-                                solicitudData.Apellidos.length
+                                  solicitudData.Apellidos.length
                                   ? "✔"
                                   : "*"}
                               </p>
@@ -337,7 +352,7 @@ export function Cotizar() {
                                 }
                               >
                                 {solicitudData.Cedula &&
-                                solicitudData.Cedula.length
+                                  solicitudData.Cedula.length
                                   ? "✔"
                                   : "*"}
                               </p>
@@ -362,7 +377,7 @@ export function Cotizar() {
                                 }
                               >
                                 {solicitudData["Fecha de nacimiento"] &&
-                                solicitudData["Fecha de nacimiento"].length
+                                  solicitudData["Fecha de nacimiento"].length
                                   ? "✔"
                                   : "*"}
                               </p>
@@ -479,7 +494,7 @@ export function Cotizar() {
                                 }
                               >
                                 {solicitudData["Tiempo de servicios"] &&
-                                solicitudData["Tiempo de servicios"].length
+                                  solicitudData["Tiempo de servicios"].length
                                   ? "✔"
                                   : "*"}
                               </p>
@@ -606,7 +621,7 @@ export function Cotizar() {
                                 }
                               >
                                 {solicitudData["Precio de ventas"] &&
-                                solicitudData["Precio de ventas"].length
+                                  solicitudData["Precio de ventas"].length
                                   ? "✔"
                                   : "*"}
                               </p>
@@ -640,7 +655,7 @@ export function Cotizar() {
                                 }
                               >
                                 {solicitudData["Abono inicial sugerido"] &&
-                                solicitudData["Abono inicial sugerido"].length
+                                  solicitudData["Abono inicial sugerido"].length
                                   ? "✔"
                                   : "*"}
                               </p>
@@ -674,7 +689,7 @@ export function Cotizar() {
                                 }
                               >
                                 {solicitudData["Monto de prestamo"] &&
-                                solicitudData["Monto de prestamo"].length
+                                  solicitudData["Monto de prestamo"].length
                                   ? "✔"
                                   : "*"}
                               </p>
@@ -708,7 +723,7 @@ export function Cotizar() {
                                 }
                               >
                                 {solicitudData["Plazo anual"] &&
-                                solicitudData["Plazo anual"].length
+                                  solicitudData["Plazo anual"].length
                                   ? "✔"
                                   : "*"}
                               </p>
@@ -742,7 +757,7 @@ export function Cotizar() {
                                 }
                               >
                                 {solicitudData["Salario"] &&
-                                solicitudData["Salario"].length
+                                  solicitudData["Salario"].length
                                   ? "✔"
                                   : "*"}
                               </p>
@@ -780,7 +795,7 @@ export function Cotizar() {
                                   }
                                 >
                                   {solicitudData2.Nombres &&
-                                  solicitudData2.Nombres.length
+                                    solicitudData2.Nombres.length
                                     ? "✔"
                                     : "*"}
                                 </p>
@@ -806,7 +821,7 @@ export function Cotizar() {
                                   }
                                 >
                                   {solicitudData2.Apellidos &&
-                                  solicitudData2.Apellidos.length
+                                    solicitudData2.Apellidos.length
                                     ? "✔"
                                     : "*"}
                                 </p>
@@ -858,7 +873,7 @@ export function Cotizar() {
                                   }
                                 >
                                   {solicitudData2.Cedula &&
-                                  solicitudData2.Cedula.length
+                                    solicitudData2.Cedula.length
                                     ? "✔"
                                     : "*"}
                                 </p>
@@ -884,7 +899,7 @@ export function Cotizar() {
                                   }
                                 >
                                   {solicitudData["Fecha de nacimiento"] &&
-                                  solicitudData["Fecha de nacimiento"].length
+                                    solicitudData["Fecha de nacimiento"].length
                                     ? "✔"
                                     : "*"}
                                 </p>
@@ -1007,7 +1022,7 @@ export function Cotizar() {
                                   }
                                 >
                                   {solicitudData2["Tiempo de servicios"] &&
-                                  solicitudData2["Tiempo de servicios"].length
+                                    solicitudData2["Tiempo de servicios"].length
                                     ? "✔"
                                     : "*"}
                                 </p>
@@ -1138,7 +1153,7 @@ export function Cotizar() {
                                   }
                                 >
                                   {solicitudData2["Precio de ventas"] &&
-                                  solicitudData2["Precio de ventas"].length
+                                    solicitudData2["Precio de ventas"].length
                                     ? "✔"
                                     : "*"}
                                 </p>
@@ -1159,7 +1174,7 @@ export function Cotizar() {
                                     placeholder="Abono inicial sujerido"
                                     defaultValue={
                                       solicitudData2[
-                                        "Abono inicial sugerido"
+                                      "Abono inicial sugerido"
                                       ] &&
                                       solicitudData2["Abono inicial sugerido"]
                                     }
@@ -1174,8 +1189,8 @@ export function Cotizar() {
                                   }
                                 >
                                   {solicitudData2["Abono inicial sugerido"] &&
-                                  solicitudData2["Abono inicial sugerido"]
-                                    .length
+                                    solicitudData2["Abono inicial sugerido"]
+                                      .length
                                     ? "✔"
                                     : "*"}
                                 </p>
@@ -1209,7 +1224,7 @@ export function Cotizar() {
                                   }
                                 >
                                   {solicitudData2["Monto de prestamo"] &&
-                                  solicitudData2["Monto de prestamo"].length
+                                    solicitudData2["Monto de prestamo"].length
                                     ? "✔"
                                     : "*"}
                                 </p>
@@ -1243,7 +1258,7 @@ export function Cotizar() {
                                   }
                                 >
                                   {solicitudData2["Plazo anual"] &&
-                                  solicitudData2["Plazo anual"].length
+                                    solicitudData2["Plazo anual"].length
                                     ? "✔"
                                     : "*"}
                                 </p>
@@ -1277,7 +1292,7 @@ export function Cotizar() {
                                   }
                                 >
                                   {solicitudData2["Salario"] &&
-                                  solicitudData2["Salario"].length
+                                    solicitudData2["Salario"].length
                                     ? "✔"
                                     : "*"}
                                 </p>
@@ -1343,13 +1358,13 @@ export function Cotizar() {
                             <span>Abono inicial Sugerido: </span> <br />
                             <span>
                               {checkNewSolicitud == "true" &&
-                              solicitudData2["Abono inicial sugerido"]
+                                solicitudData2["Abono inicial sugerido"]
                                 ? parseInt(
-                                    solicitudData["Abono inicial sugerido"]
-                                  ) +
-                                  parseInt(
-                                    solicitudData2["Abono inicial sugerido"]
-                                  )
+                                  solicitudData["Abono inicial sugerido"]
+                                ) +
+                                parseInt(
+                                  solicitudData2["Abono inicial sugerido"]
+                                )
                                 : solicitudData["Abono inicial sugerido"]}
                             </span>
                             <hr />
@@ -1458,7 +1473,7 @@ export function Cotizar() {
                                   }
                                 >
                                   {solicitudData["Numero de Celular REF1"] &&
-                                  solicitudData["Numero de Celular REF1"].length
+                                    solicitudData["Numero de Celular REF1"].length
                                     ? "Correcto"
                                     : "*Debe rellenar el formulario"}
                                 </p>
@@ -1515,7 +1530,7 @@ export function Cotizar() {
                                   }
                                 >
                                   {solicitudData["Numero de Celular REF2"] &&
-                                  solicitudData["Numero de Celular REF2"].length
+                                    solicitudData["Numero de Celular REF2"].length
                                     ? "Correcto"
                                     : "*Debe rellenar el formulario"}
                                 </p>
@@ -1541,7 +1556,7 @@ export function Cotizar() {
                                   }
                                 >
                                   {solicitudData["Nombre Completo REF3"] &&
-                                  solicitudData["Nombre Completo REF3"].length
+                                    solicitudData["Nombre Completo REF3"].length
                                     ? "Correcto"
                                     : "*Debe rellenar el formulario"}
                                 </p>
@@ -1573,7 +1588,7 @@ export function Cotizar() {
                                   }
                                 >
                                   {solicitudData["Numero de Celular REF3"] &&
-                                  solicitudData["Numero de Celular REF3"].length
+                                    solicitudData["Numero de Celular REF3"].length
                                     ? "Correcto"
                                     : "*Debe rellenar el formulario"}
                                 </p>
@@ -1613,12 +1628,12 @@ export function Cotizar() {
                               name="Identificacion 1"
                               style={{ display: "none" }}
                               onChange={handlerUploadFile}
-                              accept="images"
+                              accept=".jpg, .png"
                             />
                             <img
                               src={
                                 postsIMG[
-                                  `${solicitudData.Cedula}Identificacion 1`
+                                `${solicitudData.Cedula}Identificacion 1`
                                 ]
                               }
                               style={{
@@ -1643,12 +1658,12 @@ export function Cotizar() {
                               name="Identificacion 2"
                               style={{ display: "none" }}
                               onChange={handlerUploadFile}
-                              accept="images"
+                              accept=".jpg, .png"
                             />
                             <img
                               src={
                                 postsIMG[
-                                  `${solicitudData.Cedula}Identificacion 2`
+                                `${solicitudData.Cedula}Identificacion 2`
                                 ]
                               }
                               style={{
@@ -1673,20 +1688,24 @@ export function Cotizar() {
                               name="Carta de trabajo"
                               style={{ display: "none" }}
                               onChange={handlerUploadFile}
-                              accept=".jpg, .png, .pdf"
+                              accept=".pdf"
                             />
                             <img
                               src={
                                 postsIMG[
-                                  `${solicitudData.Cedula}Carta de trabajo`
-                                ]
+                                `${solicitudData.Cedula}Carta de trabajo`
+                                ] && "./adobe.png"
                               }
                               style={{
                                 width: "30%",
                                 height: "250px",
-                                objectFit: "cover",
+                                objectFit: "contain",
+                                objectPosition: "center",
                                 marginBottom: "15px",
                               }}
+                              onClick={()=>redirect(postsIMG[
+                                `${solicitudData.Cedula}Carta de trabajo`
+                                ])}
                               alt=""
                             />
                           </div>
@@ -1703,16 +1722,18 @@ export function Cotizar() {
                               name="FichaCSS"
                               style={{ display: "none" }}
                               onChange={handlerUploadFile}
-                              accept=".jpg, .png, .pdf"
+                              accept=".pdf"
                             />
                             <img
-                              src={postsIMG[`${solicitudData.Cedula}FichaCSS`]}
+                              src={postsIMG[`${solicitudData.Cedula}FichaCSS`] && "./adobe.png"}
                               style={{
                                 width: "30%",
                                 height: "250px",
-                                objectFit: "cover",
+                                objectFit: "contain",
+                                objectPosition: "center",
                                 marginBottom: "15px",
                               }}
+                              onClick={()=>redirect(postsIMG[`${solicitudData.Cedula}FichaCSS`])}
                               alt=""
                             />
                           </div>
@@ -1729,18 +1750,21 @@ export function Cotizar() {
                               name="Talonario 1"
                               style={{ display: "none" }}
                               onChange={handlerUploadFile}
-                              accept=".jpg, .png, .pdf"
+                              accept=".pdf"
                             />
                             <img
                               src={
-                                postsIMG[`${solicitudData.Cedula}Talonario 1`]
+                                postsIMG[`${solicitudData.Cedula}Talonario 1`] && "./adobe.png"
                               }
                               style={{
                                 width: "30%",
                                 height: "250px",
-                                objectFit: "cover",
+                                objectFit: "contain",
+                                objectPosition: "center",
                                 marginBottom: "15px",
                               }}
+                              onClick={()=>redirect(postsIMG[`${solicitudData.Cedula}Talonario 1`])}
+
                               alt=""
                             />
                           </div>
@@ -1757,18 +1781,20 @@ export function Cotizar() {
                               name="Talonario 2"
                               style={{ display: "none" }}
                               onChange={handlerUploadFile}
-                              accept=".jpg, .png, .pdf"
+                              accept=".pdf"
                             />
                             <img
                               src={
-                                postsIMG[`${solicitudData.Cedula}Talonario 2`]
+                                postsIMG[`${solicitudData.Cedula}Talonario 2`] && "./adobe.png"
                               }
                               style={{
                                 width: "30%",
                                 height: "250px",
-                                objectFit: "cover",
+                                objectFit: "contain",
+                                objectPosition: "center",
                                 marginBottom: "15px",
                               }}
+                              onClick={()=>redirect(postsIMG[`${solicitudData.Cedula}Talonario 2`])}
                               alt=""
                             />
                           </div>
@@ -1777,7 +1803,7 @@ export function Cotizar() {
                               htmlFor="Contrato"
                               className="w-75 btn btn-Cotizador btn-l mb-3 text-light"
                             >
-                              Subir contrato o proforma{" "}
+                              Subir contrato o proforma
                             </label>
                             <input
                               type="file"
@@ -1785,16 +1811,19 @@ export function Cotizar() {
                               name="Contrato"
                               style={{ display: "none" }}
                               onChange={handlerUploadFile}
-                              accept=".jpg, .png, .pdf"
+                              accept=".pdf"
                             />
+                            
                             <img
-                              src={postsIMG[`${solicitudData.Cedula}Contrato`]}
+                              src={postsIMG[`${solicitudData.Cedula}Contrato`] && "./adobe.png"}
                               style={{
                                 width: "30%",
                                 height: "250px",
-                                objectFit: "cover",
+                                objectFit: "contain",
+                                objectPosition: "center",
                                 marginBottom: "15px",
                               }}
+                              onClick={()=>redirect(postsIMG[`${solicitudData.Cedula}Contrato`])}
                               alt=""
                             />
                           </div>

@@ -1,5 +1,6 @@
 import { useAuth } from '../../context/AuthContext.js'
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 import styles from './Modal.module.css'
 
@@ -214,27 +215,50 @@ export default function Modal({ item, click }) {
                         </tr>
                         <tr>
                             <td>Otra Identificacion</td>
-                            <td>{userDB.solicitudes[item]['Numero de Celular REF1']}</td>
+                            <img src={postsIMG[userDB.solicitudes[item].Cedula + "Identificacion 2"]} alt="" />
                         </tr>
                         <tr>
                             <td>Carta de trabajo</td>
-                            <td>{userDB.solicitudes[item]['Nombre Completo REF2']}</td>
+                            {postsIMG[userDB.solicitudes[item].Cedula + "Carta de trabajo"] &&
+                                <a href={postsIMG[userDB.solicitudes[item].Cedula + "Carta de trabajo"]} target='_blanck' style={{ textDecoration: "none" }}>
+                                    <img src="./adobe.png" alt="" />
+                                </a>}
                         </tr>
                         <tr>
                             <td>Ficha de seguro social</td>
-                            <td>{userDB.solicitudes[item]['Numero de Celular REF2']}</td>
+                            {postsIMG[userDB.solicitudes[item].Cedula + "FichaCSS"] &&
+                                <a href={postsIMG[userDB.solicitudes[item].Cedula + "FichaCSS"]} target='_blanck' style={{ textDecoration: "none" }}>
+
+                                    <img src="./adobe.png" alt="" />
+                                </a>
+                            }
                         </tr>
                         <tr>
                             <td>Talonario 1</td>
-                            <td>{userDB.solicitudes[item]['Nombre Completo REF3']}</td>
+                            {postsIMG[userDB.solicitudes[item].Cedula + "Talonario 1"] &&
+                                <a href={postsIMG[userDB.solicitudes[item].Cedula + "Talonario 1"]} target='_blanck' style={{ textDecoration: "none" }}>
+
+                                    <img src="./adobe.png" alt="" />
+                                </a>
+                            }
                         </tr>
                         <tr>
                             <td>Talonario 2</td>
-                            <td>{userDB.solicitudes[item]['Numero de Celular REF2']}</td>
+                            {postsIMG[userDB.solicitudes[item].Cedula + "Talonario 2"] &&
+                                <a href={postsIMG[userDB.solicitudes[item].Cedula + "Talonario 2"]} target='_blanck' style={{ textDecoration: "none" }}>
+
+                                    <img src="./adobe.png" alt="" />
+                                </a>
+                            }
                         </tr>
                         <tr>
                             <td>Contrato o proforma</td>
-                            <td>{userDB.solicitudes[item]['Numero de Celular REF2']}</td>
+                            {postsIMG[userDB.solicitudes[item].Cedula + "Contrato"] &&
+                                <a href={postsIMG[userDB.solicitudes[item].Cedula + "Contrato"]} target='_blanck' style={{ textDecoration: "none" }}>
+
+                                    <img src="./adobe.png" alt="" />
+                                </a>
+                            }
                         </tr>
                     </tbody>
                 </>}

@@ -1,6 +1,7 @@
 import Dashboard from "./pages/home/Dashboard";
 import Login from "./components/Login";
 import Register from "./components/Register";
+import Details from "./components/Details";
 import List from "./pages/list/List";
 import Single from "./pages/single/Single";
 import New from "./pages/new/New";
@@ -71,6 +72,13 @@ function App() {
               </PrivateRoute>
             }
           />
+          **<Route
+            path="SolicitudesData/:item"
+            element={
+              <PrivateRoute isAllowed={user}>
+                <Details />
+              </PrivateRoute>}
+          />**
           <Route path="/">
             <Route path="users">
               <Route index element={<List />} />

@@ -47,7 +47,8 @@ export function Cotizar() {
       setUserPostsIMG
     );
   }
-  console.log(postsIMG);
+  console.log(solicitudData);
+  console.log(selectedDate);
   const handlerEventChange = (e) => {
     SetgetPorcentajeFijo({
       ...getPorcentajeFijo,
@@ -75,7 +76,6 @@ export function Cotizar() {
     setFormSolicitud(data);
   };
 
-  console.log(checkNewSolicitud);
 
   const saveSolicitud = (e, letter) => {
     e.preventDefault();
@@ -131,6 +131,12 @@ export function Cotizar() {
     setSolicitudData({ ...solicitudData, [e.target.name]: e.target.value });
   };
 
+
+function handlerPicker (date) {
+  setSolicitudData({ ...solicitudData, fechaDeNacimiento: `${date.getDay()}-${date.getMonth()}-${date.getFullYear()}` });
+  setselectedDate(date)
+}
+
   const calculoDeCotaMensual = () => {
     const p = solicitudData["Monto de prestamo"]; // montoDePrestamo
     const n = solicitudData["Plazo anual"] * 12; // plazoEnMeses
@@ -141,9 +147,12 @@ export function Cotizar() {
 
     setInteresMensual(i);
     setCotaMensual(cotaMes);
-
+    
+    console.log(i)
+    setSolicitudData({ ...solicitudData, tasaCalc : Math.round(interesMensual * 100000) / 100000 });
     //  setSaveCotizacion(false);
   };
+
 
   const remove = (e) => {
     e.preventDefault();
@@ -362,22 +371,21 @@ export function Cotizar() {
                                 className="d-block border-secondary form-control text-center w-100"
                                 name="Fecha de nacimiento"
                                 selected={selectedDate}
-                                onChange={(date) => setselectedDate && date}
                                 isClearable
                                 showYearDropdown
                                 scrollableMonthYearDropdown
                                 placeholderText={"Escoger fecha"}
-                                onChange={(date) => setselectedDate(date)}
-                              />
+                                onChange={(date) => handlerPicker(date)}
+                                />
                               <p
                                 className={
-                                  solicitudData["Fecha de nacimiento"]
+                                  solicitudData["fechaDeNacimiento"]
                                     ? "text-success w-100 text-center"
                                     : "text-danger w-100 text-center"
                                 }
                               >
-                                {solicitudData["Fecha de nacimiento"] &&
-                                  solicitudData["Fecha de nacimiento"].length
+                                {solicitudData["fechaDeNacimiento"] &&
+                                  solicitudData["fechaDeNacimiento"].length
                                   ? "✔"
                                   : "*"}
                               </p>
@@ -476,7 +484,7 @@ export function Cotizar() {
 
                             <div className="d-flex flex-column mb-2">
                               <input
-                                type="text"
+                                type="number"
                                 name="Tiempo de servicios"
                                 className="border-secondary form-control text-center"
                                 placeholder="Tiempo de servicios"
@@ -582,11 +590,10 @@ export function Cotizar() {
                                   name="Tasa de interes anual"
                                   className="w-100 border-secondary form-control  text-center p-2 m-0"
                                   placeholder="Tasa de interes anual"
-                                  defaultValue={
-                                    solicitudData["Tasa de interes anual"] &&
-                                    solicitudData["Tasa de interes anual"]
-                                  }
-                                  value={getPorcentajeFijo.tasaDeinteresAnual}
+                                  // defaultValue={
+                                  //   12
+                                  // }
+                                  // value={getPorcentajeFijo.tasaDeinteresAnual}
                                   onChange={handlerEventChange}
                                 />
                               </div>
@@ -884,7 +891,6 @@ export function Cotizar() {
                                   className="d-block border-secondary form-control text-center w-100"
                                   name="Fecha de nacimiento"
                                   selected={selectedDate}
-                                  onChange={(date) => setselectedDate && date}
                                   isClearable
                                   showYearDropdown
                                   scrollableMonthYearDropdown
@@ -1870,7 +1876,7 @@ export function Cotizar() {
                                 </Link>
 
                                 <Link
-                                  to="/SolicitudesData"
+                                  to={`/SolicitudesData/${solicitudData.Cedula}`}
                                   style={{ textDecoration: "none" }}
                                 >
                                   <button className="w-50 btn btn-outline-info m-6">

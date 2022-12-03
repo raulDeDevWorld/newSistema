@@ -10,6 +10,7 @@ import { getList } from "../storageFB";
 export function SolicitudesData() {
     const { userDB, setUserData, postsIMG, setUserPostsIMG } = useAuth()
     const [modal, setModal] = useState(false);
+    const navigate = useNavigate();
 
 
     const remove = (item) => {
@@ -17,7 +18,7 @@ export function SolicitudesData() {
     }
     console.log(userDB)
     const handlerItemClick = (item) => {
-        setModal(!modal)
+        navigate(`/SolicitudesData/${item}`)
     }
 
 
@@ -39,13 +40,10 @@ export function SolicitudesData() {
                         <th>Borrar</th>
                     </tr>
                 </thead>
-            </table>
-            <table className="table h-100">
+
+
                 {userDB && Object.keys(userDB.solicitudes).map((item, index) =>
-
                     <>
-
-                       {modal && <Modal item={item} click={handlerItemClick}></Modal>}
                         <tbody>
 
                             <tr onClick={() => handlerItemClick(item)}>

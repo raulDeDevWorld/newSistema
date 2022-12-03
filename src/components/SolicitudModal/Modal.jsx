@@ -2,18 +2,22 @@ import { useAuth } from '../../context/AuthContext.js'
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
-import styles from './Modal.module.css'
+import styles from '../Modal.module.css'
 
 export default function Modal({ item, click }) {
 
     const { userDB, setUserData, postsIMG } = useAuth()
-    const [topic, setTopic] = useState("Resumen de la Solicitud");
+    const [topic, setTopic] = useState(null);
 
     console.log(userDB)
     function handlerSection(letter) {
         setTopic(letter)
     }
+    useEffect(() => {
 
+        topic === null && setTopic('Resumen de la Solicitud')
+
+    }, [topic]);
     return (
         <div className={styles.modal}>
             <table className="table-sm bg-light">
@@ -27,7 +31,7 @@ export default function Modal({ item, click }) {
                 </thead>
 
 
-                {topic === "Resumen de la Solicitud" && <>
+                {topic === 'Resumen de la Solicitud' ? <>
                     <thead>
                         <tr>
                             <th>Oficial asignado</th>
@@ -85,7 +89,7 @@ export default function Modal({ item, click }) {
                             <td>Ninguno</td>
                         </tr>
                     </tbody>
-                </>}
+                </>: ''}
 
 
                 {topic === "Datos Generales" && <>

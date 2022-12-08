@@ -1,7 +1,6 @@
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, Link, useNavigate} from "react-router-dom";
 import { useAuth } from '../context/AuthContext.js'
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 
 import styles from './SolicitudModal/Modal.module.css'
 const Details = () => {

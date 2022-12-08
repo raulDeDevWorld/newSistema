@@ -1,7 +1,7 @@
 import Dashboard from "./pages/home/Dashboard";
 import Login from "./components/Login";
 import Register from "./components/Register";
-import Details from "../src/components/details";
+import Details from "./components/Details";
 import List from "./pages/list/List";
 import Single from "./pages/single/Single";
 import New from "./pages/new/New";
@@ -41,7 +41,7 @@ function App() {
               </PrivateRoute>
             }
           />
-          
+
           <Route
             path="/dashboardoficial"
             element={

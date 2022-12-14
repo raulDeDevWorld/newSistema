@@ -15,24 +15,23 @@ export function SolicitudesData() {
     const [feedback, setFeedback] = useState({})
     const [item, setItem] = useState(null)
     const [funcion, setFuncion] = useState(null)
-    const [estado, setEstado] = useState('Aprobado')
 
 
     const navigate = useNavigate();
 
 
-
+    
     const aprobar = (item) => {
-        const observations = feedback[item] ? { observaciones: feedback[item] } : null;
-        const object = { estado: 'Aprobado', ...observations }
+        const observations =feedback[item] ? {observaciones: feedback[item]} : null;
+        const object = {estado: 'Aprobado', ...observations} 
         const url = `solicitudes/${item}`
         const complemento = ''
         writeUserData(url, complemento, object)
         setUserSuccess('Aprobado')
-    }
+    }   
     const reprobar = (item) => {
-        const observations = feedback[item] ? { observaciones: feedback[item] } : null;
-        const object = { estado: 'Reprobado', ...observations }
+        const observations =feedback[item] ? {observaciones: feedback[item]} : null;
+        const object = {estado: 'Reprobado', ...observations} 
         const url = `solicitudes/${item}`
         const complemento = ''
         writeUserData(url, complemento, object)
@@ -43,7 +42,7 @@ export function SolicitudesData() {
     const handleOnChange = (e) => {
         const name = e.target.name
         const value = e.target.value
-        setFeedback({ ...feedback, [name]: value })
+        setFeedback({...feedback, [name]: value})
     }
 
     const handlerItemClick = (item) => {
@@ -55,34 +54,19 @@ export function SolicitudesData() {
         setModal(!modal)
     }
 
-    const handlerEstado = (data) => {
-        setEstado(data)
-    }
-    
-    const close = () => {
+    const close =  () => {
         setModal(!modal)
     }
-
+    
 
     useEffect(() => {
-        postsIMG === true && getList(postsIMG, setUserPostsIMG)
+        postsIMG === true &&  getList(postsIMG, setUserPostsIMG)
     }, [postsIMG]);
     return (
         <>
+        {success == 'Reprobado' && <Error>Reprobado</Error>}
+        {success == 'Aprobado' && <Success>Aprobado</Success>}
 
-            {success == 'Reprobado' && <Error>Reprobado</Error>}
-            {success == 'Aprobado' && <Success>Aprobado</Success>}
-            <ul class="nav nav-tabs">
-                <li class="nav-item">
-                    <a class={`nav-link ${estado === 'Aprobado' && 'active'}`} href="#!" onClick={()=>handlerEstado('Aprobado')}>Enviadas</a>
-                </li>
-                <li class="nav-item">
-                    <a class={`nav-link ${estado === 'Reprobado' && 'active'}`} href="#!" onClick={()=>handlerEstado('Reprobado')}>Devueltas</a>
-                </li>
-                <li class="nav-item">
-                    <a class={`nav-link ${estado === 'Reconsideradas' && 'active'}`} href="#!" onClick={()=>handlerEstado('Reconsideradas')}>Reconsideradas</a>
-                </li>
-            </ul>
 
             <table className="table h-100">
                 <thead>
@@ -94,16 +78,16 @@ export function SolicitudesData() {
                         <th>Tasa de interes anual</th>
                         <th>Precio de venta</th>
                         <th>Observationes</th>
-                       {estado === 'Reprobado' &&  <th>Aprobar</th>}
-                       {estado === 'Aprobado' &&  <th>Reprobar</th>}
-
+                        <th>Aprobar</th>
+                        <th>Reprobar</th>
+                        
                     </tr>
                 </thead>
 
 
                 {userDB && Object.keys(userDB.solicitudes).map((item, index) =>
                     <>
-                        {userDB.solicitudes[item].estado == estado && <tbody>
+                        {userDB.solicitudes[item].estado == undefined && <tbody>
 
                             <tr>
                                 <th scope="row">{index}</th>
@@ -113,8 +97,9 @@ export function SolicitudesData() {
                                 <td>{userDB.solicitudes[item]["Tasa de interes anual"]}</td>
                                 <td>{userDB.solicitudes[item]["Precio de ventas"]}$</td>
                                 <td> <input name={item} onChange={handleOnChange} placeholder="Observaciones" /> </td>
-{                          estado === 'Reprobado' &&      <td><button type="button" class="btn btn-success" onClick={() => handlerModal(item, 'Aprobar')}>Aprobar/Guardar</button></td>}
-{                          estado === 'Aprobado' &&       <td><button type="button" class="btn btn-danger" onClick={() => handlerModal(item, 'Reprobar')}>Reprobar/Guardar</button></td>}
+                                <td><button type="button" class="btn btn-success" onClick={() => handlerModal(item, 'Aprobar')}>Aprobar/Guardar</button></td>
+                                <td><button type="button" class="btn btn-danger" onClick={() => handlerModal(item, 'Reprobar')}>Reprobar/Guardar</button></td>
+
                             </tr>
                         </tbody>}
 
@@ -122,7 +107,7 @@ export function SolicitudesData() {
                     </>
                 )}
             </table>
-            {modal && <Modal item={item} funcion={funcion == 'Reprobar' ? reprobar : aprobar} funcionName={funcion} close={close} />}
+            {modal && <Modal item={item} funcion={funcion == 'Reprobar' ? reprobar : aprobar} funcionName={funcion} close={close}/>}
 
         </>
     );

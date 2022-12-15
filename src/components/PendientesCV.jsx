@@ -15,34 +15,36 @@ export function SolicitudesData() {
     const [feedback, setFeedback] = useState({})
     const [item, setItem] = useState(null)
     const [funcion, setFuncion] = useState(null)
+    const [estado, setEstado] = useState(undefined)
 
 
     const navigate = useNavigate();
 
 
-    
-    const aprobar = (item) => {
-        const observations =feedback[item] ? {observaciones: feedback[item]} : null;
-        const object = {estado: 'Aprobado', ...observations} 
-        const url = `solicitudes/${item}`
-        const complemento = ''
-        writeUserData(url, complemento, object)
-        setUserSuccess('Aprobado')
-    }   
-    const reprobar = (item) => {
-        const observations =feedback[item] ? {observaciones: feedback[item]} : null;
-        const object = {estado: 'Reprobado', ...observations} 
-        const url = `solicitudes/${item}`
-        const complemento = ''
-        writeUserData(url, complemento, object)
-        setUserSuccess('Reprobado')
 
+    const handlerSolicitud = (item, data) => {
+        const observations = feedback[item] ? { observaciones: feedback[item] } : null;
+        const object = { estado: data, ...observations }
+        const url = `solicitudes/${item}`
+        const complemento = ''
+        writeUserData(url, complemento, object)
+        setUserSuccess('EnviadoCV')
+        setModal(false)
     }
+    // const devolver = (item) => {
+    //     const observations = feedback[item] ? { observaciones: feedback[item] } : null;
+    //     const object = { estado: 'Reprobado', ...observations }
+    //     const url = `solicitudes/${item}`
+    //     const complemento = ''
+    //     writeUserData(url, complemento, object)
+    //     setUserSuccess('DevueltoCV')
+
+    // }
 
     const handleOnChange = (e) => {
         const name = e.target.name
         const value = e.target.value
-        setFeedback({...feedback, [name]: value})
+        setFeedback({ ...feedback, [name]: value })
     }
 
     const handlerItemClick = (item) => {
@@ -54,19 +56,22 @@ export function SolicitudesData() {
         setModal(!modal)
     }
 
-    const close =  () => {
+    const handlerEstado = (data) => {
+        setEstado(data)
+    }
+
+    const close = () => {
         setModal(!modal)
     }
-    
+
 
     useEffect(() => {
-        postsIMG === true &&  getList(postsIMG, setUserPostsIMG)
+        postsIMG === true && getList(postsIMG, setUserPostsIMG)
     }, [postsIMG]);
     return (
         <>
-        {success == 'Reprobado' && <Error>Reprobado</Error>}
-        {success == 'Aprobado' && <Success>Aprobado</Success>}
 
+        
 
             <table className="table h-100">
                 <thead>
@@ -79,15 +84,16 @@ export function SolicitudesData() {
                         <th>Precio de venta</th>
                         <th>Observationes</th>
                         <th>Aprobar</th>
-                        <th>Reprobar</th>
-                        
+                   <th>Reprobar</th>
+                       
+
                     </tr>
                 </thead>
 
 
                 {userDB && Object.keys(userDB.solicitudes).map((item, index) =>
                     <>
-                        {userDB.solicitudes[item].estado == undefined && <tbody>
+                        {userDB.solicitudes[item].estado == 'Enviado' && <tbody>
 
                             <tr>
                                 <th scope="row">{index}</th>
@@ -96,18 +102,16 @@ export function SolicitudesData() {
                                 <td onClick={() => handlerItemClick(item)}>{userDB.solicitudes[item].Cedula}</td>
                                 <td>{userDB.solicitudes[item]["Tasa de interes anual"]}</td>
                                 <td>{userDB.solicitudes[item]["Precio de ventas"]}$</td>
-                                <td> <input name={item} onChange={handleOnChange} placeholder="Observaciones" /> </td>
-                                <td><button type="button" class="btn btn-success" onClick={() => handlerModal(item, 'Aprobar')}>Aprobar/Guardar</button></td>
-                                <td><button type="button" class="btn btn-danger" onClick={() => handlerModal(item, 'Reprobar')}>Reprobar/Guardar</button></td>
-
+                               <td> <input name={item} onChange={handleOnChange} placeholder="Observaciones" /> </td>
+                               <td><button type="button" class="btn btn-success" onClick={() => handlerModal(item,  'Aprobado')}>Enviar/Guardar</button></td>
+                                <td><button type="button" class="btn btn-danger" onClick={() => handlerModal(item, 'Reprobado')}>Devolver/Guardar</button></td>
+                            
                             </tr>
                         </tbody>}
-
-
                     </>
                 )}
             </table>
-            {modal && <Modal item={item} funcion={funcion == 'Reprobar' ? reprobar : aprobar} funcionName={funcion} close={close}/>}
+            {modal && <Modal item={item} funcion={handlerSolicitud} funcionName={funcion} close={close} />}
 
         </>
     );

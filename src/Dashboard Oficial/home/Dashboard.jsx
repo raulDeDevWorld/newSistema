@@ -24,7 +24,9 @@ const Dashboard = () => {
 }, [userDB]);
   return (
     <>
-    {userDB && userDB.users && userDB.users[user.uid] && userDB.users[user.uid].rol && userDB.users[user.uid].rol === 'oficial' && <div className="home">
+    {userDB && 
+    userDB.users && userDB.users[user.uid] && userDB.users[user.uid].rol && userDB.users[user.uid].rol === 'oficial' && 
+    <div className="home">
       <Sidebar />
       <div className="homeContainer">
         <Navbar />

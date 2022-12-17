@@ -54,8 +54,16 @@ function App() {
               </PrivateRoute>
             }
           />
+
+          <Route
+            path="/DashCreditoAnalisis"
+            element={
+              <PrivateRoute isAllowed={user}>
+                <DashCreditoAnalisis />
+              </PrivateRoute>
+            }
+          />
           {/* <Route path="/DashCreditoVerificacion" element={<DashCreditoVerificacion />}></Route> */}
-          <Route path="/DashCreditoAnalisis" element={<DashCreditoAnalisis />}></Route>
           <Route path="Login" element={<Login />} />
           <Route path="Register" element={<Register />} />
 
@@ -109,7 +117,7 @@ function App() {
               <PrivateRoute isAllowed={user}>
                 <Pendientes />
               </PrivateRoute>
-            } 
+            }
           />
           <Route
             path="PendientesCV"

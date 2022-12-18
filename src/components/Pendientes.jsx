@@ -109,7 +109,7 @@ export function SolicitudesData() {
 
                 {userDB && Object.keys(userDB.solicitudes).map((item, index) =>
                     <>
-                        {userDB.solicitudes[item].estado == 'Enviado' && <tbody>
+                        {userDB.solicitudes[item].estado == estado && <tbody>
 
                             <tr>
                                 <th scope="row">{index}</th>

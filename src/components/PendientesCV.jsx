@@ -15,7 +15,7 @@ export function SolicitudesData() {
     const [feedback, setFeedback] = useState({})
     const [item, setItem] = useState(null)
     const [funcion, setFuncion] = useState(null)
-    const [estado, setEstado] = useState(undefined)
+    const [estado, setEstado] = useState('Enviado')
 
 
     const navigate = useNavigate();
@@ -71,7 +71,17 @@ export function SolicitudesData() {
     return (
         <>
 
-        
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a class={`nav-link ${estado === 'Enviado' && 'active'}`} href="#!" onClick={() => handlerEstado('Enviado')}>Pencientes</a>
+                </li>
+                <li class="nav-item">
+                    <a class={`nav-link ${estado === 'EnviadoCV' && 'active'}`} href="#!" onClick={() => handlerEstado('EnviadoCV')}>Enviadas</a>
+                </li>
+                <li class="nav-item">
+                    <a class={`nav-link ${estado === 'DevueltoCV' && 'active'}`} href="#!" onClick={() => handlerEstado('DevueltoCV')}>Devueltos</a>
+                </li>
+            </ul>
 
             <table className="table h-100">
                 <thead>
@@ -83,17 +93,17 @@ export function SolicitudesData() {
                         <th>Tasa de interes anual</th>
                         <th>Precio de venta</th>
                         <th>Observationes</th>
-                        <th>Aprobar</th>
-                   <th>Reprobar</th>
-                       
-
+                        {estado ===  'DevueltoCV' && <th>Enviar</th>}
+                        {estado === 'EnviadoCV'&& <th>Devolver</th>}
+                        { estado === 'Enviado' && <th>Enviar</th>}
+                        { estado === 'Enviado' && <th>Devolver</th>}
                     </tr>
                 </thead>
 
 
                 {userDB && Object.keys(userDB.solicitudes).map((item, index) =>
                     <>
-                        {userDB.solicitudes[item].estado == 'Enviado' && <tbody>
+                        {userDB.solicitudes[item].estado == estado && <tbody>
 
                             <tr>
                                 <th scope="row">{index}</th>
@@ -102,10 +112,13 @@ export function SolicitudesData() {
                                 <td onClick={() => handlerItemClick(item)}>{userDB.solicitudes[item].Cedula}</td>
                                 <td>{userDB.solicitudes[item]["Tasa de interes anual"]}</td>
                                 <td>{userDB.solicitudes[item]["Precio de ventas"]}$</td>
-                               <td> <input name={item} onChange={handleOnChange} placeholder="Observaciones" /> </td>
-                               <td><button type="button" class="btn btn-success" onClick={() => handlerModal(item,  'EnviadoCV')}>Enviar/Guardar</button></td>
-                                <td><button type="button" class="btn btn-danger" onClick={() => handlerModal(item, 'DevueltoCV')}>Devolver/Guardar</button></td>
-                            
+                                <td> <input name={item} onChange={handleOnChange} placeholder="Observaciones" /> </td>
+                                {estado === 'Enviado' && <td><button type="button" class="btn btn-success" onClick={() => handlerModal(item, 'EnviadoCV')}>Enviar/Guardar</button></td>}
+                                {estado === 'Enviado' && <td><button type="button" class="btn btn-danger" onClick={() => handlerModal(item, 'DevueltoCV')}>Devolver/Guardar</button></td>}
+
+                                {estado === 'DevueltoCV' && <td><button type="button" class="btn btn-success" onClick={() => handlerModal(item, 'EnviadoCV')}>Enviar/Guardar</button></td>}
+                                {estado === 'EnviadoCV' && <td><button type="button" class="btn btn-danger" onClick={() => handlerModal(item, 'DevueltoCV')}>Devolver/Guardar</button></td>}
+
                             </tr>
                         </tbody>}
                     </>

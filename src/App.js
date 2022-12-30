@@ -2,6 +2,8 @@ import Dashboard from "./pages/home/Dashboard";
 import Login from "./components/Login";
 import Register from "./components/Register";
 import Details from "./components/Details";
+import DashboardCartas from "../src/Dashboard Cartas/home/Dashboard"
+import DashboardPipeline from "./Dashboard Pipeline/home/Dashboard"
 import List from "./pages/list/List";
 import Single from "./pages/single/Single";
 import New from "./pages/new/New";
@@ -20,6 +22,10 @@ import Login2 from "./pages/login/Login";
 import SolicitudesData from "./components/SolicitudesData";
 import Pendientes from "./components/Pendientes";
 import PendientesCV from "./components/PendientesCV";
+import PendientesCA from "./components/PendientesCA";
+import PendientesC from "./components/PendientesC";
+import EntregasInmediatas from "./components/EntregasInmediatas";
+import EntregasFuturas from "./components/EntregasFuturas";
 import Verificadas from "./components/Verificadas";
 
 import Aprobadas from "./components/Aprobadas";
@@ -63,9 +69,35 @@ function App() {
               </PrivateRoute>
             }
           />
+
+          <Route
+            path="/DashboardPipeline"
+            element={
+              <PrivateRoute isAllowed={user}>
+                <DashboardPipeline />
+              </PrivateRoute>
+            }
+          />
+
+
+          <Route
+            path="/DashCartas"
+            element={
+              <PrivateRoute isAllowed={user}>
+                <DashboardCartas />
+              </PrivateRoute>
+            }
+          />
+
+
           {/* <Route path="/DashCreditoVerificacion" element={<DashCreditoVerificacion />}></Route> */}
           <Route path="Login" element={<Login />} />
           <Route path="Register" element={<Register />} />
+
+{/* 
+          <Route path="/DashboardPipeline" element={<DashboardPipeline />} />
+          <Route path="/DashCartas" element={<DashboardCartas />} /> */}
+
 
 
           <Route element={<PrivateRoute isAllowed={user} redirectTo="/Login" />}>
@@ -124,6 +156,38 @@ function App() {
             element={
               <PrivateRoute isAllowed={user}>
                 <PendientesCV />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="PendientesCA"
+            element={
+              <PrivateRoute isAllowed={user}>
+                <PendientesCA />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="PendientesC"
+            element={
+              <PrivateRoute isAllowed={user}>
+                <PendientesC />
+              </PrivateRoute>
+            }
+          />
+           <Route
+            path="EntregasInmediatas"
+            element={
+              <PrivateRoute isAllowed={user}>
+                <EntregasInmediatas />
+              </PrivateRoute>
+            }
+          />
+              <Route
+            path="EntregasFuturas"
+            element={
+              <PrivateRoute isAllowed={user}>
+                <EntregasFuturas />
               </PrivateRoute>
             }
           />

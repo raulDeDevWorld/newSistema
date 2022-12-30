@@ -42,9 +42,7 @@ const Dashboard = () => {
         <div className="listContainer">
           <div className="listTitle">Ultimas efectuaciones</div>
         </div>
-        <Link to="/DashCreditoVerificacion" style={{ textDecoration: "none" }}>
-      <button>Dashboard Credito Verificacion</button>
-      </Link>
+       
       </div>
       
     </div>

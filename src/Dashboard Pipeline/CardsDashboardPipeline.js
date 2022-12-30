@@ -1,34 +1,34 @@
 import React from "react";
-import Card from "./CardDashboardCreditoAnalisis";
-import image1 from "../assets/pendientes.png";
-import image2 from '../assets/aprobadas.png'
-import image3 from '../assets/rechazadas.png'
+import Card from "./CardDashboardPipeline";
+import image1 from "../assets/aprobadas.png";
+import image2 from '../assets/ENTREGAS_FUTURAS.png'
+import image3 from '../assets/SOLICITUDES_ASIGNADAS.png'
 
 
 const cards = [
   {
     id: 1,
-    title: "Pendientes",
+    title: "Entregas Inmediatas",
     image: image1,
-    link: "/PendientesCA",
+    link: "/EntregasInmediatas",
     text: "Revisa las solicitudes que aún están pendientes",
     buttontext: "Pendientes"
   },
   {
     id: 2,
-    title: "Aprobadas",
+    title: "Entregas Futuras",
     image: image2,
-    link: "/Aprobadas",
+    link: "/EntregasFuturas",
     text: "Descripcion pendiente",
-    buttontext: "Aprobadas"
+    buttontext: "Renovaciones"
   },
   {
     id: 3,
-    title: "Rechazadas",
+    title: "Solicitudes Asignadas",
     image: image3,
     link: "/Rechazadas",
     text: "Descripcion pendiente",
-    buttontext: "Rechazadas"
+    buttontext: "Completadas"
   },
 ];
 

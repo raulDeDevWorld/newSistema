@@ -103,8 +103,8 @@ export function SolicitudesData() {
                                 <td>{userDB.solicitudes[item]["Tasa de interes anual"]}</td>
                                 <td>{userDB.solicitudes[item]["Precio de ventas"]}$</td>
                                <td> <input name={item} onChange={handleOnChange} placeholder="Observaciones" /> </td>
-                               <td><button type="button" class="btn btn-success" onClick={() => handlerModal(item,  'Aprobado')}>Enviar/Guardar</button></td>
-                                <td><button type="button" class="btn btn-danger" onClick={() => handlerModal(item, 'Reprobado')}>Devolver/Guardar</button></td>
+                               <td><button type="button" class="btn btn-success" onClick={() => handlerModal(item,  'EnviadoCV')}>Enviar/Guardar</button></td>
+                                <td><button type="button" class="btn btn-danger" onClick={() => handlerModal(item, 'DevueltoCV')}>Devolver/Guardar</button></td>
                             
                             </tr>
                         </tbody>}

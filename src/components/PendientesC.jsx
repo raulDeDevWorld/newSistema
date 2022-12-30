@@ -10,12 +10,12 @@ import Success from './Success'
 import { getList } from "../storageFB";
 
 export function SolicitudesData() {
-    const { userDB, setUserData, postsIMG, setUserPostsIMG, setUserSuccess, success, } = useAuth()
+    const { userDB, setUserData, postsIMG, setUserPostsIMG, setUserSuccess, success } = useAuth()
     const [modal, setModal] = useState(false);
     const [feedback, setFeedback] = useState({})
     const [item, setItem] = useState(null)
     const [funcion, setFuncion] = useState(null)
-    const [estado, setEstado] = useState(undefined) 
+    const [estado, setEstado] = useState(undefined)
 
 
     const navigate = useNavigate();
@@ -23,11 +23,12 @@ export function SolicitudesData() {
 
 
     const handlerSolicitud = (item, data) => {
-        const object = { estado: data, ...feedback }
+        const observations = feedback[item] ? { observaciones: feedback[item] } : null;
+        const object = { estado: data, ...observations }
         const url = `solicitudes/${item}`
         const complemento = ''
         writeUserData(url, complemento, object)
-        setUserSuccess('EnviadoCV')
+        setUserSuccess('EnviadoC')
         setModal(false)
     }
     // const devolver = (item) => {
@@ -63,29 +64,14 @@ export function SolicitudesData() {
         setModal(!modal)
     }
 
-
+console.log(feedback)
     useEffect(() => {
         postsIMG === true && getList(postsIMG, setUserPostsIMG)
     }, [postsIMG]);
     return (
         <>
 
-            {success == 'Reprobado' && <Error>Reprobado</Error>}
-            {success == 'Aprobado' && <Success>Aprobado</Success>}
-            <ul class="nav nav-tabs">
-                <li class="nav-item">
-                    <a class={`nav-link ${estado === undefined && 'active'}`} href="#!" onClick={() => handlerEstado(undefined)}>Nuevos</a>
-                </li>
-                <li class="nav-item">
-                    <a class={`nav-link ${estado === 'Enviado' && 'active'}`} href="#!" onClick={() => handlerEstado('Enviado')}>Enviadas</a>
-                </li>
-                <li class="nav-item">
-                    <a class={`nav-link ${estado === 'Devuelto' && 'active'}`} href="#!" onClick={() => handlerEstado('Devuelto')}>Devueltos</a>
-                </li>
-                <li class="nav-item">
-                    <a class={`nav-link ${estado === 'Reconsiderada' && 'active'}`} href="#!" onClick={() => handlerEstado('Reconsiderada')}>Reconsideradas</a>
-                </li>
-            </ul>
+        
 
             <table className="table h-100">
                 <thead>
@@ -98,11 +84,9 @@ export function SolicitudesData() {
                         <th>Precio de venta</th>
                         <th>Observationes</th>
                         <th>Fecha de E</th>
-
-                        {estado ===  'Devuelto' && <th>Enviar</th>}
-                        {estado === 'Enviado'&& <th>Devolver</th>}
-                        { estado === undefined && <th>Enviar</th>}
-                        { estado === undefined && <th>Devolver</th>}
+                        <th>Aprobar</th>
+                   <th>Reprobar</th>
+                       
 
                     </tr>
                 </thead>
@@ -110,7 +94,7 @@ export function SolicitudesData() {
 
                 {userDB && Object.keys(userDB.solicitudes).map((item, index) =>
                     <>
-                        {userDB.solicitudes[item].estado == estado && <tbody>
+                        {userDB.solicitudes[item].estado == 'EnviadoCA' && <tbody>
 
                             <tr>
                                 <th scope="row">{index}</th>
@@ -119,12 +103,12 @@ export function SolicitudesData() {
                                 <td onClick={() => handlerItemClick(item)}>{userDB.solicitudes[item].Cedula}</td>
                                 <td>{userDB.solicitudes[item]["Tasa de interes anual"]}</td>
                                 <td>{userDB.solicitudes[item]["Precio de ventas"]}$</td>
-                               <td> <input name='observaciones' onChange={handleOnChange} placeholder="Observaciones" /> </td>
+
+                               <td> <input name={item} onChange={handleOnChange} placeholder="Observaciones" /> </td>
                                <td><input type='date' name='fecha' onChange={handleOnChange} /></td>
-                               {estado === 'Devuelto'  && <td><button type="button" class="btn btn-success" onClick={() => handlerModal(item,  'Enviado')}>Enviar/Guardar</button></td>}
-                                {estado === 'Enviado'  && <td><button type="button" class="btn btn-danger" onClick={() => handlerModal(item, 'Devuelto')}>Devolver/Guardar</button></td>}
-                                { estado === undefined && <td><button type="button" class="btn btn-success" onClick={() => handlerModal(item,  'Enviado')}>Enviar/Guardar</button></td>}
-                                { estado === undefined && <td><button type="button" class="btn btn-danger" onClick={() => handlerModal(item, 'Devuelto')}>Devolver/Guardar</button></td>}
+
+                               <td><button type="button" class="btn btn-success" onClick={() => handlerModal(item,  'EnviadoC')}>Enviar/Guardar</button></td>
+                                <td><button type="button" class="btn btn-danger" onClick={() => handlerModal(item, 'DevueltoC')}>Devolver/Guardar</button></td>
                             
                             </tr>
                         </tbody>}

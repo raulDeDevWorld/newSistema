@@ -84,6 +84,12 @@ export function SolicitudesData() {
                 <li class="nav-item">
                     <a class={`nav-link ${estado === 'Validacion' && 'active'}`} href="#!" onClick={() => handlerEstado('Validacion')}>Validación</a>
                 </li>
+                <li class="nav-item">
+                    <a class={`nav-link ${estado === 'DevueltoP' && 'active'}`} href="#!" onClick={() => handlerEstado('DevueltoP')}>Devueltas</a>
+                </li>
+                <li class="nav-item">
+                    <a class={`nav-link ${estado === 'DevueltoT' && 'active'}`} href="#!" onClick={() => handlerEstado('DevueltoT')}>Rechazados</a>
+                </li>
             </ul>
 
             <table className="table h-100">

@@ -82,7 +82,9 @@ export function SolicitudesData() {
                 <li class="nav-item">
                     <a class={`nav-link ${estado === 'DevueltoT' && 'active'}`} href="#!" onClick={() => handlerEstado('DevueltoT')}>Devueltos</a>
                 </li>
-           
+                <li class="nav-item">
+                    <a class={`nav-link ${estado === 'DevueltoD' && 'active'}`} href="#!" onClick={() => handlerEstado('DevueltoD')}>Rechazados</a>
+                </li>
             </ul>
 
             <table className="table h-100">
@@ -97,11 +99,17 @@ export function SolicitudesData() {
                         <th>Observationes</th>
                         <th>Fecha de E</th>
 
-                        {estado ===  'DevueltoV' && <th>Enviar</th>}
-                        {estado === 'Enviado'&& <th>Devolver</th>}
+                        {estado ===  'DevueltoT' && <th>Enviar</th>}
+                        {estado === 'EnviadoT'&& <th>Devolver</th>}
+
+                        {estado ===  'Tramites' && <th>Enviar</th>}
+                        {estado === 'Tramites'&& <th>Devolver</th>}
+
                         { estado === 'Validacion' && <th>Enviar</th>}
                         { estado === 'Validacion' && <th>Devolver</th>}
 
+                        { estado === 'DevueltoD' && <th>Enviar</th>}
+                        { estado === 'DevueltoD' && <th>Devolver</th>}
                     </tr>
                 </thead>
 
@@ -123,6 +131,8 @@ export function SolicitudesData() {
                                 {estado === 'EnviadoT'  && <td><button type="button" class="btn btn-danger" onClick={() => handlerModal(item, 'DevueltoT')}>Devolver/Guardar</button></td>}
                                 { estado === 'Tramites' && <td><button type="button" class="btn btn-success" onClick={() => handlerModal(item,  'EnviadoT')}>Enviar/Guardar</button></td>}
                                 { estado === 'Tramites' && <td><button type="button" class="btn btn-danger" onClick={() => handlerModal(item, 'DevueltoT')}>Devolver/Guardar</button></td>}
+                                { estado === 'DevueltoD' && <td><button type="button" class="btn btn-success" onClick={() => handlerModal(item,  'EnviadoT')}>Enviar/Guardar</button></td>}
+                                { estado === 'DevueltoD' && <td><button type="button" class="btn btn-danger" onClick={() => handlerModal(item, 'DevueltoT')}>Devolver/Guardar</button></td>}
                             
                             </tr>
                         </tbody>}

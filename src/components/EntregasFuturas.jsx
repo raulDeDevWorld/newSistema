@@ -119,7 +119,7 @@ export function SolicitudesData() {
                             <tr>
                                 {/* {    console.log(new Date(userDB.solicitudes[item].fecha))} */}
 
-                                {console.log(Math.floor(new Date().getTime() - new Date(userDB.solicitudes[item].fecha).getTime()) / (1000 * 60 * 60 * 24))}
+                                {console.log(Math.floor(new Date().getTime() - new Date(userDB.solicitudes[item].fechaDeEmision).getTime()) / (1000 * 60 * 60 * 24))}
 
                                 <th scope="row">{index}</th>
                                 <td onClick={() => handlerItemClick(item)}>{userDB.solicitudes[item].Nombres}</td>
@@ -131,7 +131,7 @@ export function SolicitudesData() {
                                 <td><button
                                     type="button"
                                     class="btn btn-success"
-                                    onClick={userDB.solicitudes[item].estado == estado && Math.floor(new Date().getTime() - new Date(userDB.solicitudes[item].fecha).getTime()) / (1000 * 60 * 60 * 24) > 360
+                                    onClick={userDB.solicitudes[item].estado == estado && Math.floor(new Date().getTime() - new Date(userDB.solicitudes[item].fechaDeEmision).getTime()) / (1000 * 60 * 60 * 24) > 360
                                         ? () => handlerModal(item, 'Validacion')
                                         : () => handlerModal(item, 'Tramites')}>
                                     Tramitar/Guardar

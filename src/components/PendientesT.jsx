@@ -10,12 +10,12 @@ import Success from './Success'
 import { getList } from "../storageFB";
 
 export function SolicitudesData() {
-    const { userDB, setUserData, postsIMG, setUserPostsIMG, setUserSuccess, success } = useAuth()
+    const { userDB, setUserData, postsIMG, setUserPostsIMG, setUserSuccess, success, } = useAuth()
     const [modal, setModal] = useState(false);
     const [feedback, setFeedback] = useState({})
     const [item, setItem] = useState(null)
     const [funcion, setFuncion] = useState(null)
-    const [estado, setEstado] = useState('EnviadoC')
+    const [estado, setEstado] = useState('Tramites') 
 
 
     const navigate = useNavigate();
@@ -23,8 +23,7 @@ export function SolicitudesData() {
 
 
     const handlerSolicitud = (item, data) => {
-        const observations = feedback[item] ? { observaciones: feedback[item] } : null;
-        const object = { estado: data, ...observations }
+        const object = { estado: data, ...feedback }
         const url = `solicitudes/${item}`
         const complemento = ''
         writeUserData(url, complemento, object)
@@ -68,22 +67,22 @@ export function SolicitudesData() {
     useEffect(() => {
         postsIMG === true && getList(postsIMG, setUserPostsIMG)
     }, [postsIMG]);
-
-
-
     return (
         <>
 
-<ul class="nav nav-tabs">
+            {success == 'Reprobado' && <Error>Reprobado</Error>}
+            {success == 'Aprobado' && <Success>Aprobado</Success>}
+            <ul class="nav nav-tabs">
                 <li class="nav-item">
-                    <a class={`nav-link ${estado === 'EnviadoC' && 'active'}`} href="#!" onClick={() => handlerEstado('EnviadoC')}>Nuevos</a>
+                    <a class={`nav-link ${estado === 'Tramites' && 'active'}`} href="#!" onClick={() => handlerEstado('Tramites')}>Nuevos</a>
                 </li>
                 <li class="nav-item">
-                    <a class={`nav-link ${estado === 'Tramites' && 'active'}`} href="#!" onClick={() => handlerEstado('Tramites')}>Tramites</a>
+                    <a class={`nav-link ${estado === 'EnviadoT' && 'active'}`} href="#!" onClick={() => handlerEstado('EnviadoT')}>Enviadas</a>
                 </li>
                 <li class="nav-item">
-                    <a class={`nav-link ${estado === 'Validacion' && 'active'}`} href="#!" onClick={() => handlerEstado('Validacion')}>Validación</a>
+                    <a class={`nav-link ${estado === 'DevueltoT' && 'active'}`} href="#!" onClick={() => handlerEstado('DevueltoT')}>Devueltos</a>
                 </li>
+           
             </ul>
 
             <table className="table h-100">
@@ -96,9 +95,12 @@ export function SolicitudesData() {
                         <th>Tasa de interes anual</th>
                         <th>Precio de venta</th>
                         <th>Observationes</th>
-                        <th>Tramitar</th>
-                   <th>Devolver</th>
-                       
+                        <th>Fecha de E</th>
+
+                        {estado ===  'DevueltoV' && <th>Enviar</th>}
+                        {estado === 'Enviado'&& <th>Devolver</th>}
+                        { estado === 'Validacion' && <th>Enviar</th>}
+                        { estado === 'Validacion' && <th>Devolver</th>}
 
                     </tr>
                 </thead>
@@ -106,22 +108,21 @@ export function SolicitudesData() {
 
                 {userDB && Object.keys(userDB.solicitudes).map((item, index) =>
                     <>
-                        {userDB.solicitudes[item].estado == estado && Math.floor(new Date().getTime() - new Date(userDB.solicitudes[item].fecha).getTime())/(1000*60*60*24) < 180 && <tbody>
+                        { userDB.solicitudes[item].estado == estado && <tbody>
 
                             <tr>
-                                {/* {    console.log(new Date(userDB.solicitudes[item].fecha))} */}
-
-                                {    console.log(Math.floor(new Date().getTime() - new Date(userDB.solicitudes[item].fecha).getTime())/(1000*60*60*24))}
-
                                 <th scope="row">{index}</th>
                                 <td onClick={() => handlerItemClick(item)}>{userDB.solicitudes[item].Nombres}</td>
                                 <td onClick={() => handlerItemClick(item)}>{userDB.solicitudes[item].Apellidos}</td>
                                 <td onClick={() => handlerItemClick(item)}>{userDB.solicitudes[item].Cedula}</td>
                                 <td>{userDB.solicitudes[item]["Tasa de interes anual"]}</td>
                                 <td>{userDB.solicitudes[item]["Precio de ventas"]}$</td>
-                               <td> <input name={item} onChange={handleOnChange} placeholder="Observaciones" /> </td>
-                               <td><button type="button" class="btn btn-success" onClick={() => handlerModal(item,  'Tramites')}>Tramitar/Guardar</button></td>
-                                <td><button type="button" class="btn btn-danger" onClick={() => handlerModal(item, 'DevueltoP')}>Devolver/Guardar</button></td>
+                               <td> <input name='observaciones' onChange={handleOnChange} placeholder="Observaciones" /> </td>
+                               <td><input type='date' name='fecha' onChange={handleOnChange} /></td>
+                               {estado === 'DevueltoT'  && <td><button type="button" class="btn btn-success" onClick={() => handlerModal(item,  'EnviadoT')}>Enviar/Guardar</button></td>}
+                                {estado === 'EnviadoT'  && <td><button type="button" class="btn btn-danger" onClick={() => handlerModal(item, 'DevueltoT')}>Devolver/Guardar</button></td>}
+                                { estado === 'Tramites' && <td><button type="button" class="btn btn-success" onClick={() => handlerModal(item,  'EnviadoT')}>Enviar/Guardar</button></td>}
+                                { estado === 'Tramites' && <td><button type="button" class="btn btn-danger" onClick={() => handlerModal(item, 'DevueltoT')}>Devolver/Guardar</button></td>}
                             
                             </tr>
                         </tbody>}
